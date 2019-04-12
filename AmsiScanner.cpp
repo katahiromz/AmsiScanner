@@ -78,8 +78,11 @@ HRESULT AmsiScanner::OpenSession(HAMSISESSION *phSession)
 
 void AmsiScanner::CloseSession(HAMSISESSION *phSession)
 {
-    AmsiCloseSession(m_hContext, *phSession);
-    *phSession = NULL;
+    if (phSession && *phSession)
+    {
+        AmsiCloseSession(m_hContext, *phSession);
+        *phSession = NULL;
+    }
 }
 
 void AmsiScanner::FreeSample(Sample *sample)
