@@ -4,13 +4,29 @@
 #include <cstdio>
 #include "AmsiScanner.hpp"
 
+void show_help(void)
+{
+    printf("Usage: AmsiTest [files-to-be-virus-checked]\n");
+}
+
+void show_version(void)
+{
+    printf("AmsiScanner 1.0 by katahiromz\n");
+}
+
 extern "C"
 int wmain(int argc, wchar_t **wargv)
 {
-    if (argc <= 1)
+    if (argc <= 1 || lstrcmpiW(wargv[1], L"--help") == 0)
     {
-        printf("Usage: AmsiTest [files-to-be-virus-checked]\n");
-        return 1;
+        show_help();
+        return 0;
+    }
+
+    if (lstrcmpiW(wargv[1], L"--version") == 0)
+    {
+        show_version();
+        return 0;
     }
 
     AmsiScanner scanner(L"katahiromz's AmsiScanner");
@@ -35,9 +51,9 @@ int wmain(int argc, wchar_t **wargv)
     for (int i = 1; i < argc; ++i, ++total_count)
     {
         hr = E_FAIL;
-        if (scanner.LoadSample(&sample, wargv[i]))
+        if (scanner.LoadSample(sample, wargv[i]))
         {
-            hr = scanner.ScanSample(hSession, &sample, &result);
+            hr = scanner.ScanSample(hSession, sample, result);
             if (FAILED(hr))
             {
                 printf("ERROR: ScanSample failed\n");
@@ -63,7 +79,7 @@ int wmain(int argc, wchar_t **wargv)
             ++not_detected;
         }
 
-        scanner.FreeSample(&sample);
+        scanner.FreeSample(sample);
     }
 
     scanner.CloseSession(&hSession);

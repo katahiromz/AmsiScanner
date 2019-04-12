@@ -1,6 +1,5 @@
 // AmsiScanner.cpp
 #include "AmsiScanner.hpp"
-#include <cstdlib>
 
 AmsiScanner::AmsiScanner() :
 #ifdef WRAP_AMSI
@@ -85,27 +84,28 @@ void AmsiScanner::CloseSession(HAMSISESSION *phSession)
     }
 }
 
-void AmsiScanner::FreeSample(Sample *sample)
+void AmsiScanner::FreeSample(Sample& sample)
 {
-    if (sample->data)
+    if (sample.data)
     {
-        std::free(sample->data);
-        sample->data = NULL;
+        std::free(sample.data);
+        sample.data = NULL;
     }
-    sample->size = 0;
+    sample.size = 0;
 }
 
-HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const Sample *sample, ScanResult *result)
+HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const Sample& sample,
+                                ScanResult& result)
 {
-    result->init();
+    result.init();
 
     HRESULT hr;
-    hr = AmsiScanBuffer(m_hContext, sample->data, sample->size, sample->pathname,
-                        hSession, &result->value);
+    hr = AmsiScanBuffer(m_hContext, sample.data, sample.size, sample.pathname,
+                        hSession, &result.value);
     if (hr == S_OK)
     {
-        result->IsUnknown = FALSE;
-        result->IsMalware = AmsiResultIsMalware(result->value);
+        result.IsUnknown = FALSE;
+        result.IsMalware = AmsiResultIsMalware(result.value);
     }
     return hr;
 }
@@ -132,11 +132,11 @@ const char *AmsiScanner::ScanResult::result_string() const
     }
 }
 
-BOOL AmsiScanner::LoadSample(Sample *sample, const WCHAR *filename)
+BOOL AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
 {
-    ZeroMemory(sample, sizeof(*sample));
+    sample.init();
 
-    GetFullPathNameW(filename, ARRAYSIZE(sample->pathname), sample->pathname, NULL);
+    GetFullPathNameW(filename, ARRAYSIZE(sample.pathname), sample.pathname, NULL);
 
     HANDLE hFile = CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL,
                                OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
@@ -174,7 +174,7 @@ BOOL AmsiScanner::LoadSample(Sample *sample, const WCHAR *filename)
 
     CloseHandle(hFile);
 
-    sample->data = buffer;
-    sample->size = dwFileSize;
+    sample.data = buffer;
+    sample.size = dwFileSize;
     return TRUE;
 }

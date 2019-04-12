@@ -1,8 +1,9 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 2
+#define AMSI_SCANNER_HPP_ 3
 
 #include "pamsi.h"
+#include <cstdlib>
 
 class AmsiScanner
 {
@@ -39,16 +40,24 @@ public:
         void *data;     // malloc'ed
         DWORD size;
         WCHAR pathname[MAX_PATH];
+        void init()
+        {
+            if (data)
+                std::free(data);
+            data = NULL;
+            size = 0;
+            pathname[0] = 0;
+        }
     };
 
 public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
-    BOOL LoadSample(Sample *sample, const WCHAR *filename);
-    void FreeSample(Sample *sample);
+    BOOL LoadSample(Sample& sample, const WCHAR *filename);
+    void FreeSample(Sample& sample);
 
-    HRESULT ScanSample(HAMSISESSION hSession, const Sample *sample, ScanResult *result);
+    HRESULT ScanSample(HAMSISESSION hSession, const Sample& sample, ScanResult& result);
 
 protected:
     #ifdef WRAP_AMSI
