@@ -1,4 +1,4 @@
-// AmsiTest.cpp
+// AmsiScannerMain.cpp
 // Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>
 // This file is public domain software.
 #include <cstdio>
@@ -11,7 +11,7 @@ void show_help(void)
 
 void show_version(void)
 {
-    printf("AmsiScanner 1.0 by katahiromz\n");
+    printf("AmsiScanner 1.1 by katahiromz\n");
 }
 
 extern "C"
@@ -89,9 +89,8 @@ int wmain(int argc, wchar_t **wargv)
     if (detected)
     {
         printf("# DETECTED.\n");
-        return 999;
+        return 2;
     }
-
     if (total_count == not_detected)
     {
         printf("# PASSED.\n");
