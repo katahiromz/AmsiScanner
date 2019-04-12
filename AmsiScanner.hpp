@@ -23,6 +23,10 @@ public:
         BOOL IsUnknown;
         ScanResult()
         {
+            init();
+        }
+        void init()
+        {
             value = AMSI_RESULT_NOT_DETECTED;
             IsMalware = FALSE;
             IsUnknown = TRUE;

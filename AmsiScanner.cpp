@@ -94,9 +94,7 @@ void AmsiScanner::FreeSample(Sample *sample)
 
 HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const Sample *sample, ScanResult *result)
 {
-    result->value = AMSI_RESULT_NOT_DETECTED;
-    result->IsMalware = FALSE;
-    result->IsUnknown = TRUE;
+    result->init();
 
     HRESULT hr;
     hr = AmsiScanBuffer(m_hContext, sample->data, sample->size, sample->pathname,
