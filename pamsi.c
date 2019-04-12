@@ -2,7 +2,6 @@
 #include "pamsi.h"
 
 #ifdef WRAP_AMSI
-
 #define AMSIDLL "amsi.dll"
 
 AMSIINITIALIZE g_pAmsiInitialize = NULL;
@@ -17,14 +16,12 @@ HINSTANCE APIENTRY PAMSI_Load(void)
     HINSTANCE hinst = LoadLibraryA(AMSI_DLL);
     if (hinst)
     {
-#define GET_PROC(fn) g_p##fn = GetProcAddress(hinst, #fn)
-        GET_PROC(AmsiInitialize);
-        GET_PROC(AmsiUninitialize);
-        GET_PROC(AmsiOpenSession);
-        GET_PROC(AmsiCloseSession);
-        GET_PROC(AmsiScanString);
-        GET_PROC(AmsiScanBuffer);
-#undef GET_PROC
+        g_pAmsiInitialize = (AMSIINITIALIZE)GetProcAddress(hinst, "AmsiInitialize");
+        g_pAmsiUninitialize = (AMSIUNINITIALIZE)GetProcAddress(hinst, "AmsiUninitialize");
+        g_pAmsiOpenSession = (AMSIOPENSESSION)GetProcAddress(hinst, "AmsiOpenSession");
+        g_pAmsiCloseSession = (AMSICLOSESESSION)GetProcAddress(hinst, "AmsiCloseSession");
+        g_pAmsiScanString = (AMSISCANSTRING)GetProcAddress(hinst, "AmsiScanString");
+        g_pAmsiScanBuffer = (AMSISCANBUFFER)GetProcAddress(hinst, "AmsiScanBuffer");
         if (g_pAmsiInitialize &&
             g_pAmsiUninitialize &&
             g_pAmsiOpenSession &&

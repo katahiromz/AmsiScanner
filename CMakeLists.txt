@@ -59,8 +59,21 @@ endif()
 
 ##############################################################################
 
+# HAVE_AMSI_H
+include(CheckIncludeFile)
+check_include_file(amsi.h HAVE_AMSI_H)
+if (HAVE_AMSI_H)
+    add_definitions(-DHAVE_AMSI_H)
+endif()
+
+# WRAP_AMSI
+option(WRAP_AMSI "Wrap AMSI" ON)
+
 # libpamsi.a
 add_library(pamsi STATIC pamsi.c)
+if (WRAP_AMSI)
+    target_compile_definitions(pamsi PRIVATE -DWRAP_AMSI)
+endif()
 
 # libpamsixx.a
 add_library(pamsixx STATIC pamsixx.cpp)
