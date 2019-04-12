@@ -132,7 +132,7 @@ const char *AmsiScanner::ScanResult::result_string() const
     }
 }
 
-BOOL AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
+HRESULT AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
 {
     sample.init();
 
@@ -142,14 +142,14 @@ BOOL AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
                                OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     if (hFile == INVALID_HANDLE_VALUE)
     {
-        return FALSE;
+        return E_FAIL;
     }
 
     DWORD dwFileSize = GetFileSize(hFile, NULL);
     if (dwFileSize == INVALID_FILE_SIZE)
     {
         CloseHandle(hFile);
-        return FALSE;
+        return E_FAIL;
     }
 
     BYTE *buffer = NULL;
@@ -159,7 +159,7 @@ BOOL AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
         if (!buffer)
         {
             CloseHandle(hFile);
-            return FALSE;
+            return E_OUTOFMEMORY;
         }
 
         DWORD cbRead;
@@ -168,7 +168,7 @@ BOOL AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
         {
             std::free(buffer);
             CloseHandle(hFile);
-            return FALSE;
+            return E_FAIL;
         }
     }
 
@@ -176,5 +176,5 @@ BOOL AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
 
     sample.data = buffer;
     sample.size = dwFileSize;
-    return TRUE;
+    return S_OK;
 }

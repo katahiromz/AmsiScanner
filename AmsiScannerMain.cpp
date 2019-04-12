@@ -50,14 +50,14 @@ int wmain(int argc, wchar_t **wargv)
     int total_count = 0, not_detected = 0, detected = 0, unknown = 0;
     for (int i = 1; i < argc; ++i, ++total_count)
     {
-        hr = E_FAIL;
-        if (scanner.LoadSample(sample, wargv[i]))
+        hr = scanner.LoadSample(sample, wargv[i]);
+        if (SUCCEEDED(hr))
         {
             hr = scanner.ScanSample(hSession, sample, result);
-            if (FAILED(hr))
-            {
-                printf("ERROR: ScanSample failed\n");
-            }
+        }
+        if (FAILED(hr))
+        {
+            printf("ERROR: ScanSample failed\n");
         }
 
         if (result.IsUnknown)

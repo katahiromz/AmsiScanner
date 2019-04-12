@@ -56,7 +56,7 @@ public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
-    BOOL LoadSample(Sample& sample, const WCHAR *filename);
+    HRESULT LoadSample(Sample& sample, const WCHAR *filename);
     void FreeSample(Sample& sample);
 
     HRESULT ScanSample(HAMSISESSION hSession, const Sample& sample, ScanResult& result);
