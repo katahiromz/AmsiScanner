@@ -50,6 +50,8 @@ int wmain(int argc, wchar_t **wargv)
     int total_count = 0, not_detected = 0, detected = 0, unknown = 0;
     for (int i = 1; i < argc; ++i, ++total_count)
     {
+        result.init();
+
         hr = scanner.LoadSample(sample, wargv[i]);
         if (SUCCEEDED(hr))
         {
