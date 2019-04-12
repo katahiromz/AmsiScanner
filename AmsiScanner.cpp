@@ -84,7 +84,7 @@ void AmsiScanner::CloseSession(HAMSISESSION *phSession)
     }
 }
 
-void AmsiScanner::FreeSample(Sample& sample)
+void AmsiScanner::FreeSample(SAMPLE& sample)
 {
     if (sample.data)
     {
@@ -94,8 +94,8 @@ void AmsiScanner::FreeSample(Sample& sample)
     sample.size = 0;
 }
 
-HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const Sample& sample,
-                                ScanResult& result)
+HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const SAMPLE& sample,
+                                SCAN_RESULT& result)
 {
     result.init();
 
@@ -110,7 +110,7 @@ HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const Sample& sample,
     return hr;
 }
 
-const char *AmsiScanner::ScanResult::result_string() const
+const char *AmsiScanner::SCAN_RESULT::result_string() const
 {
     if (IsUnknown)
         return "Unknown";
@@ -132,7 +132,7 @@ const char *AmsiScanner::ScanResult::result_string() const
     }
 }
 
-HRESULT AmsiScanner::LoadSample(Sample& sample, const WCHAR *filename)
+HRESULT AmsiScanner::LoadSample(SAMPLE& sample, const WCHAR *filename)
 {
     sample.init();
 

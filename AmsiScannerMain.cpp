@@ -45,8 +45,8 @@ int wmain(int argc, wchar_t **wargv)
         return 3;
     }
 
-    AmsiScanner::Sample sample;
-    AmsiScanner::ScanResult result;
+    AmsiScanner::SAMPLE sample;
+    AmsiScanner::SCAN_RESULT result;
     int total_count = 0, not_detected = 0, detected = 0, unknown = 0;
     for (int i = 1; i < argc; ++i, ++total_count)
     {

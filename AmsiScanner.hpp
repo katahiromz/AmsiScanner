@@ -17,12 +17,12 @@ public:
     void Free();
 
 public:
-    struct ScanResult
+    struct SCAN_RESULT
     {
         AMSI_RESULT value;
         BOOL IsMalware;
         BOOL IsUnknown;
-        ScanResult()
+        SCAN_RESULT()
         {
             init();
         }
@@ -35,12 +35,12 @@ public:
         const char *result_string() const;
     };
 
-    struct Sample
+    struct SAMPLE
     {
         void *data;     // malloc'ed
         DWORD size;
         WCHAR pathname[MAX_PATH];
-        Sample()
+        SAMPLE()
         {
             init();
         }
@@ -56,10 +56,10 @@ public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
-    HRESULT LoadSample(Sample& sample, const WCHAR *filename);
-    void FreeSample(Sample& sample);
+    HRESULT LoadSample(SAMPLE& sample, const WCHAR *filename);
+    void FreeSample(SAMPLE& sample);
 
-    HRESULT ScanSample(HAMSISESSION hSession, const Sample& sample, ScanResult& result);
+    HRESULT ScanSample(HAMSISESSION hSession, const SAMPLE& sample, SCAN_RESULT& result);
 
 protected:
     #ifdef WRAP_AMSI
