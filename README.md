@@ -17,3 +17,5 @@ File `amsiscan.cpp` implements a test program of `AmsiScanner` class.
 ## NOTICE
 
 The AMSI interface might change in future.
+
+katayama.hirofumi.mz@gmail.com
