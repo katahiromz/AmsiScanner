@@ -64,9 +64,6 @@ include(CheckIncludeFile)
 check_include_file(amsi.h HAVE_AMSI_H)
 if (HAVE_AMSI_H)
     add_definitions(-DHAVE_AMSI_H)
-    message(STATUS "HAVE_AMSI_H: found")
-else()
-    message(STATUS "HAVE_AMSI_H: not found")
 endif()
 
 # WRAP_AMSI
