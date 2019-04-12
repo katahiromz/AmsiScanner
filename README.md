@@ -4,7 +4,7 @@ This library and program provide threat detector for Windows 10 applications by 
 
 File `pamsi.h` is a portable C/C++ AMSI header.
 
-File `pamsi.cpp` provides an AMSI wrapper. If you want to use the wrapper, then do `#define WRAP_AMSI`.
+File `pamsi.cpp` provides an AMSI wrapper. If you want to use this wrapper, then do `#define WRAP_AMSI`.
 
 Class `AmsiScanner` provides a high-level scanner interface.
 
