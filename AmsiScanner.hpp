@@ -1,6 +1,6 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 3
+#define AMSI_SCANNER_HPP_ 4
 
 #include "pamsi.h"
 #include <cstdlib>
@@ -40,10 +40,12 @@ public:
         void *data;     // malloc'ed
         DWORD size;
         WCHAR pathname[MAX_PATH];
+        Sample()
+        {
+            init();
+        }
         void init()
         {
-            if (data)
-                std::free(data);
             data = NULL;
             size = 0;
             pathname[0] = 0;
