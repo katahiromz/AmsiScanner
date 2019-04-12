@@ -5,54 +5,49 @@
 
 #define AMSIDLL "amsi.dll"
 
-template <typename T_PROC>
-inline bool get_proc(T_PROC& fn, HINSTANCE hInst, const char *name)
+AMSIINITIALIZE g_pAmsiInitialize = NULL;
+AMSIUNINITIALIZE g_pAmsiUninitialize = NULL;
+AMSIOPENSESSION g_pAmsiOpenSession = NULL;
+AMSICLOSESESSION g_pAmsiCloseSession = NULL;
+AMSISCANSTRING g_pAmsiScanString = NULL;
+AMSISCANBUFFER g_pAmsiScanBuffer = NULL;
+
+HINSTANCE APIENTRY PAMSI_Load(void)
 {
-    fn = reinterpret_cast<T_PROC>(GetProcAddress(hInst, name));
-    return fn != NULL;
+    HINSTANCE hinst = LoadLibraryA(AMSI_DLL);
+    if (hinst)
+    {
+#define GET_PROC(fn) g_p##fn = GetProcAddress(hinst, #fn)
+        GET_PROC(AmsiInitialize);
+        GET_PROC(AmsiUninitialize);
+        GET_PROC(AmsiOpenSession);
+        GET_PROC(AmsiCloseSession);
+        GET_PROC(AmsiScanString);
+        GET_PROC(AmsiScanBuffer);
+#undef GET_PROC
+        if (g_pAmsiInitialize &&
+            g_pAmsiUninitialize &&
+            g_pAmsiOpenSession &&
+            g_pAmsiCloseSession &&
+            g_pAmsiScanString &&
+            g_pAmsiScanBuffer)
+        {
+            return hinst;
+        }
+        FreeLibrary(hinst);
+    }
+    return NULL;
 }
 
-extern "C"
+void APIENTRY PAMSI_Unload(HINSTANCE hinst)
 {
-    AMSIINITIALIZE g_pAmsiInitialize = NULL;
-    AMSIUNINITIALIZE g_pAmsiUninitialize = NULL;
-    AMSIOPENSESSION g_pAmsiOpenSession = NULL;
-    AMSICLOSESESSION g_pAmsiCloseSession = NULL;
-    AMSISCANSTRING g_pAmsiScanString = NULL;
-    AMSISCANBUFFER g_pAmsiScanBuffer = NULL;
+    FreeLibrary(hinst);
+    g_pAmsiInitialize = NULL;
+    g_pAmsiUninitialize = NULL;
+    g_pAmsiOpenSession = NULL;
+    g_pAmsiCloseSession = NULL;
+    g_pAmsiScanString = NULL;
+    g_pAmsiScanBuffer = NULL;
+}
 
-#define GET_PROC(name) get_proc(g_p##name, hinst, #name)
-
-    HINSTANCE APIENTRY PAMSI_Load(void)
-    {
-        HINSTANCE hinst = LoadLibraryA(AMSI_DLL);
-        if (hinst)
-        {
-            if (GET_PROC(AmsiInitialize) &&
-                GET_PROC(AmsiUninitialize) &&
-                GET_PROC(AmsiOpenSession) &&
-                GET_PROC(AmsiCloseSession) &&
-                GET_PROC(AmsiScanString) &&
-                GET_PROC(AmsiScanBuffer))
-            {
-                return hinst;
-            }
-
-            FreeLibrary(hinst);
-        }
-        return NULL;
-    }
-
-    void APIENTRY PAMSI_Unload(HINSTANCE hinst)
-    {
-        FreeLibrary(hinst);
-        g_pAmsiInitialize = NULL;
-        g_pAmsiUninitialize = NULL;
-        g_pAmsiOpenSession = NULL;
-        g_pAmsiCloseSession = NULL;
-        g_pAmsiScanString = NULL;
-        g_pAmsiScanBuffer = NULL;
-    }
-} // extern "C"
-
-#endif  // def WRAP_AMSI
+#endif  /* def WRAP_AMSI */
