@@ -9,9 +9,9 @@ public:
     PAMSIXX();
     virtual ~PAMSIXX();
 
-    bool load();
-    void unload();
-    bool is_loaded() const;
+    bool load_amsi();
+    void unload_amsi();
+    bool is_amsi_loaded() const;
 
     HINSTANCE m_hinst;
     AMSIINITIALIZE AmsiInitialize;

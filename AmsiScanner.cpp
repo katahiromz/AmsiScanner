@@ -14,7 +14,7 @@ BOOL AmsiScanner::Load(LPCWSTR appName)
 {
     Free();
 
-    if (!PAMSIXX::load())
+    if (!PAMSIXX::load_amsi())
         return FALSE;
 
     HRESULT hr;
@@ -35,12 +35,12 @@ void AmsiScanner::Free()
         m_hContext = NULL;
     }
 
-    PAMSIXX::unload();
+    PAMSIXX::unload_amsi();
 }
 
 BOOL AmsiScanner::IsLoaded() const
 {
-    return m_hinst != NULL && m_hContext != NULL;
+    return is_amsi_loaded() && m_hContext != NULL;
 }
 
 AmsiScanner::~AmsiScanner()

@@ -18,9 +18,9 @@ inline bool get_proc(T_PROC& fn, HINSTANCE hInst, const char *name)
     return fn != NULL;
 }
 
-bool PAMSIXX::load()
+bool PAMSIXX::load_amsi()
 {
-    unload();
+    unload_amsi();
     m_hinst = LoadLibraryA(AMSI_DLL);
     if (m_hinst)
     {
@@ -46,7 +46,7 @@ bool PAMSIXX::load()
     m_hinst = NULL;
 }
 
-void PAMSIXX::unload()
+void PAMSIXX::unload_amsi()
 {
     if (m_hinst)
     {
@@ -60,7 +60,7 @@ void PAMSIXX::unload()
     AmsiScanBuffer = NULL;
 }
 
-bool PAMSIXX::is_loaded() const
+bool PAMSIXX::is_amsi_loaded() const
 {
     return m_hinst != NULL;
 }
