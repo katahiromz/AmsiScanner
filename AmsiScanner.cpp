@@ -107,9 +107,12 @@ HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const Sample *sample, Sca
     return hr;
 }
 
-const char *AmsiScanner::GetResultString(AMSI_RESULT result)
+const char *AmsiScanner::ScanResult::result_string() const
 {
-    switch (result)
+    if (IsUnknown)
+        return "Unknown";
+
+    switch (value)
     {
     case AMSI_RESULT_CLEAN:
         return "File is clean";

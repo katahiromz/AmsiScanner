@@ -46,19 +46,20 @@ int wmain(int argc, wchar_t **wargv)
 
         if (result.IsUnknown)
         {
-            printf("[%d] %ls: UNKNOWN\n", total_count + 1, sample.pathname);
+            printf("[%d] %ls: UNKNOWN: %s\n", total_count + 1, sample.pathname,
+                   result.result_string());
             ++unknown;
         }
         else if (result.IsMalware)
         {
             printf("[%d] %ls: MALWARE: %s\n", total_count + 1, sample.pathname,
-                   scanner.GetResultString(result.value));
+                   result.result_string());
             ++detected;
         }
         else
         {
             printf("[%d] %ls: NOT DETECTED: %s\n", total_count + 1, sample.pathname,
-                   scanner.GetResultString(result.value));
+                   result.result_string());
             ++not_detected;
         }
 

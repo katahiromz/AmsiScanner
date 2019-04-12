@@ -1,15 +1,15 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 1
+#define AMSI_SCANNER_HPP_ 2
 
 #include "pamsi.h"
 
 class AmsiScanner
 {
 public:
-    AmsiScanner();
-    AmsiScanner(LPCWSTR appName);
-    ~AmsiScanner();
+    AmsiScanner();  // without loading
+    AmsiScanner(LPCWSTR appName);   // with loading
+    virtual ~AmsiScanner();
 
     BOOL Load(LPCWSTR appName);
     BOOL IsLoaded() const;
@@ -31,6 +31,7 @@ public:
             IsMalware = FALSE;
             IsUnknown = TRUE;
         }
+        const char *result_string() const;
     };
 
     struct Sample
@@ -44,13 +45,10 @@ public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
-public:
-    HRESULT ScanSample(HAMSISESSION hSession, const Sample *sample, ScanResult *result);
-
     BOOL LoadSample(Sample *sample, const WCHAR *filename);
     void FreeSample(Sample *sample);
 
-    const char *GetResultString(AMSI_RESULT result);
+    HRESULT ScanSample(HAMSISESSION hSession, const Sample *sample, ScanResult *result);
 
 protected:
     #ifdef WRAP_AMSI
