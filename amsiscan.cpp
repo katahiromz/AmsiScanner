@@ -78,20 +78,23 @@ int wmain(int argc, wchar_t **wargv)
 
         if (result.IsUnknown)
         {
-            printf("[%d] %ls: UNKNOWN: %s\n", total_count + 1, wargv[i],
-                   result.result_string());
+            fprintf(stderr,
+                    "[%d] %ls: UNKNOWN: %s\n", total_count + 1, wargv[i],
+                    result.result_string());
             ++unknown;
         }
         else if (result.IsMalware)
         {
-            printf("[%d] %ls: MALWARE: %s\n", total_count + 1, wargv[i],
-                   result.result_string());
+            fprintf(stderr,
+                    "[%d] %ls: MALWARE: %s\n", total_count + 1, wargv[i],
+                    result.result_string());
             ++detected;
         }
         else
         {
-            printf("[%d] %ls: NOT DETECTED: %s\n", total_count + 1, wargv[i],
-                   result.result_string());
+            fprintf(stderr,
+                    "[%d] %ls: NOT DETECTED: %s\n", total_count + 1, wargv[i],
+                    result.result_string());
             ++not_detected;
         }
 
