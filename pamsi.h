@@ -1,6 +1,6 @@
 /* portable AMSI interface by katahiromz */
 #ifndef PAMSI_H_
-#define PAMSI_H_    1
+#define PAMSI_H_    2
 
 #ifndef _INC_WINDOWS
     #include <windows.h>
@@ -59,7 +59,9 @@ extern "C" {
     #define AmsiResultIsBlockedByAdmin(r) \
         ((r) >= AMSI_RESULT_BLOCKED_BY_ADMIN_START && \
          (r) <= AMSI_RESULT_BLOCKED_BY_ADMIN_END)
+#endif  // ndef HAVE_AMSI_H
 
+#ifdef WRAP_AMSI
     /* for LoadLibrary */
     typedef HRESULT (STDAPICALLTYPE *AMSIINITIALIZE)(
         LPCWSTR appName,
@@ -86,23 +88,22 @@ extern "C" {
         HAMSISESSION amsiSession,
         AMSI_RESULT* result);
 
-    #ifdef WRAP_AMSI
-        HINSTANCE APIENTRY LoadAmsi(void);
-        void APIENTRY UnLoadAmsi(HINSTANCE hinst);
-        extern AMSIINITIALIZE g_pAmsiInitialize;
-        extern AMSIUNINITIALIZE g_pAmsiUninitialize;
-        extern AMSIOPENSESSION g_pAmsiOpenSession;
-        extern AMSICLOSESESSION g_pAmsiCloseSession;
-        extern AMSISCANSTRING g_pAmsiScanString;
-        extern AMSISCANBUFFER g_pAmsiScanBuffer;
-        #define AmsiInitialize (*g_pAmsiInitialize)
-        #define AmsiUninitialize (*g_pAmsiUninitialize)
-        #define AmsiOpenSession (*g_pAmsiOpenSession)
-        #define AmsiCloseSession (*g_pAmsiCloseSession)
-        #define AmsiScanString (*g_pAmsiScanString)
-        #define AmsiScanBuffer (*g_pAmsiScanBuffer)
-    #endif
-#endif
+    HINSTANCE APIENTRY LoadAmsi(void);
+    void APIENTRY UnLoadAmsi(HINSTANCE hinst);
+
+    extern AMSIINITIALIZE g_pAmsiInitialize;
+    extern AMSIUNINITIALIZE g_pAmsiUninitialize;
+    extern AMSIOPENSESSION g_pAmsiOpenSession;
+    extern AMSICLOSESESSION g_pAmsiCloseSession;
+    extern AMSISCANSTRING g_pAmsiScanString;
+    extern AMSISCANBUFFER g_pAmsiScanBuffer;
+    #define AmsiInitialize (*g_pAmsiInitialize)
+    #define AmsiUninitialize (*g_pAmsiUninitialize)
+    #define AmsiOpenSession (*g_pAmsiOpenSession)
+    #define AmsiCloseSession (*g_pAmsiCloseSession)
+    #define AmsiScanString (*g_pAmsiScanString)
+    #define AmsiScanBuffer (*g_pAmsiScanBuffer)
+#endif  // def WRAP_AMSI
 
 #ifdef __cplusplus
 } // extern "C"
