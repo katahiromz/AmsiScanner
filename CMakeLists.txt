@@ -66,10 +66,10 @@ add_library(pamsi STATIC pamsi.c)
 add_library(pamsixx STATIC pamsixx.cpp)
 
 # libAmsiScanner.a
-add_library(AmsiScanner STATIC pamsixx.cpp AmsiScanner.cpp)
+add_library(AmsiScanner STATIC pamsixx.cpp AmsiScanner.cpp pamsixx)
 
 # amsiscan.exe
 add_executable(amsiscan amsiscan.cpp)
-target_link_libraries(amsiscan PRIVATE pamsixx AmsiScanner)
+target_link_libraries(amsiscan PRIVATE AmsiScanner)
 
 ##############################################################################
