@@ -1,6 +1,8 @@
 /* portable AMSI interface by katahiromz */
 #include "pamsi.h"
 
+#ifdef WRAP_AMSI
+
 #define AMSIDLL "amsi.dll"
 
 template <typename T_PROC>
@@ -52,3 +54,5 @@ extern "C"
         g_pAmsiScanBuffer = NULL;
     }
 }
+
+#endif  // def WRAP_AMSI

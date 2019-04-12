@@ -62,8 +62,15 @@ endif()
 # option
 option(WRAP_AMSI "Wrap AMSI" ON)
 
+# status
+message(STATUS "WRAP_AMSI: ${WRAP_AMSI}")
+
 # executable
-add_executable(AmsiScanner pamsi.cpp AmsiScanner.cpp AmsiScannerMain.cpp)
+if (WRAP_AMSI)
+    add_executable(AmsiScanner pamsi.cpp AmsiScanner.cpp AmsiScannerMain.cpp)
+else()
+    add_executable(AmsiScanner AmsiScanner.cpp AmsiScannerMain.cpp)
+endif()
 
 # definitions for pamsi
 target_compile_definitions(AmsiScanner PRIVATE -DUNICODE -D_UNICODE)
