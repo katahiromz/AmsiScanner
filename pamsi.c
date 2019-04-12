@@ -25,7 +25,7 @@ extern "C"
 
     HINSTANCE APIENTRY PAMSI_Load(void)
     {
-        HINSTANCE hinst = LoadLibraryA(AMSIDLL);
+        HINSTANCE hinst = LoadLibraryA(AMSI_DLL);
         if (hinst)
         {
             if (GET_PROC(AmsiInitialize) &&

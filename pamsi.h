@@ -61,33 +61,35 @@ extern "C" {
          (r) <= AMSI_RESULT_BLOCKED_BY_ADMIN_END)
 #endif  // ndef HAVE_AMSI_H
 
-#ifdef WRAP_AMSI
-    /* for LoadLibrary */
-    typedef HRESULT (STDAPICALLTYPE *AMSIINITIALIZE)(
-        LPCWSTR appName,
-        HAMSICONTEXT* amsiContext);
-    typedef VOID (STDAPICALLTYPE *AMSIUNINITIALIZE)(
-        HAMSICONTEXT amsiContext);
-    typedef HRESULT (STDAPICALLTYPE *AMSIOPENSESSION)(
-        HAMSICONTEXT amsiContext,
-        HAMSISESSION* amsiSession);
-    typedef VOID (STDAPICALLTYPE *AMSICLOSESESSION)(
-        HAMSICONTEXT amsiContext,
-        HAMSISESSION amsiSession);
-    typedef HRESULT (STDAPICALLTYPE *AMSISCANSTRING)(
-        HAMSICONTEXT amsiContext,
-        LPCWSTR string,
-        LPCWSTR contentName,
-        HAMSISESSION amsiSession,
-        AMSI_RESULT* result);
-    typedef HRESULT (STDAPICALLTYPE *AMSISCANBUFFER)(
-        HAMSICONTEXT amsiContext,
-        PVOID buffer,
-        ULONG length,
-        LPCWSTR contentName,
-        HAMSISESSION amsiSession,
-        AMSI_RESULT* result);
+/* for LoadLibrary */
+typedef HRESULT (STDAPICALLTYPE *AMSIINITIALIZE)(
+    LPCWSTR appName,
+    HAMSICONTEXT* amsiContext);
+typedef VOID (STDAPICALLTYPE *AMSIUNINITIALIZE)(
+    HAMSICONTEXT amsiContext);
+typedef HRESULT (STDAPICALLTYPE *AMSIOPENSESSION)(
+    HAMSICONTEXT amsiContext,
+    HAMSISESSION* amsiSession);
+typedef VOID (STDAPICALLTYPE *AMSICLOSESESSION)(
+    HAMSICONTEXT amsiContext,
+    HAMSISESSION amsiSession);
+typedef HRESULT (STDAPICALLTYPE *AMSISCANSTRING)(
+    HAMSICONTEXT amsiContext,
+    LPCWSTR string,
+    LPCWSTR contentName,
+    HAMSISESSION amsiSession,
+    AMSI_RESULT* result);
+typedef HRESULT (STDAPICALLTYPE *AMSISCANBUFFER)(
+    HAMSICONTEXT amsiContext,
+    PVOID buffer,
+    ULONG length,
+    LPCWSTR contentName,
+    HAMSISESSION amsiSession,
+    AMSI_RESULT* result);
 
+#define AMSI_DLL "amsi.dll"
+
+#ifdef WRAP_AMSI
     HINSTANCE APIENTRY PAMSI_Load(void);
     void APIENTRY PAMSI_Unload(HINSTANCE hinst);
 

@@ -1,4 +1,4 @@
-// AmsiScannerMain.cpp
+// amsiscan.cpp
 // Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.com>
 // This file is public domain software.
 #include <cstdio>
@@ -6,12 +6,12 @@
 
 void show_help(void)
 {
-    printf("Usage: AmsiTest [files-to-be-virus-checked]\n");
+    printf("Usage: amsiscan [files-to-be-virus-checked]\n");
 }
 
 void show_version(void)
 {
-    printf("AmsiScanner 1.1 by katahiromz\n");
+    printf("amsiscan 1.1 by katahiromz\n");
 }
 
 extern "C"

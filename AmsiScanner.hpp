@@ -2,10 +2,10 @@
 #ifndef AMSI_SCANNER_HPP_
 #define AMSI_SCANNER_HPP_ 4
 
-#include "pamsi.h"
+#include "pamsixx.hpp"
 #include <cstdlib>
 
-class AmsiScanner
+class AmsiScanner : public PAMSIXX
 {
 public:
     AmsiScanner();  // without loading
@@ -62,9 +62,6 @@ public:
     HRESULT ScanSample(HAMSISESSION hSession, const SAMPLE& sample, SCAN_RESULT& result);
 
 protected:
-    #ifdef WRAP_AMSI
-        HINSTANCE m_hinstAMSI;
-    #endif
     HAMSICONTEXT m_hContext;
 };
 

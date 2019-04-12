@@ -1,19 +1,11 @@
 // AmsiScanner.cpp
 #include "AmsiScanner.hpp"
 
-AmsiScanner::AmsiScanner() :
-#ifdef WRAP_AMSI
-    m_hinstAMSI(NULL),
-#endif
-    m_hContext(NULL)
+AmsiScanner::AmsiScanner() : m_hContext(NULL)
 {
 }
 
-AmsiScanner::AmsiScanner(LPCWSTR appName) :
-#ifdef WRAP_AMSI
-    m_hinstAMSI(NULL),
-#endif
-    m_hContext(NULL)
+AmsiScanner::AmsiScanner(LPCWSTR appName) : m_hContext(NULL)
 {
     Load(appName);
 }
@@ -22,11 +14,8 @@ BOOL AmsiScanner::Load(LPCWSTR appName)
 {
     Free();
 
-#ifdef WRAP_AMSI
-    m_hinstAMSI = PAMSI_Load();
-    if (m_hinstAMSI == NULL)
+    if (!PAMSIXX::load())
         return FALSE;
-#endif
 
     HRESULT hr;
     hr = AmsiInitialize(appName, &m_hContext);
@@ -46,22 +35,12 @@ void AmsiScanner::Free()
         m_hContext = NULL;
     }
 
-#ifdef WRAP_AMSI
-    if (m_hinstAMSI)
-    {
-        PAMSI_Unload(m_hinstAMSI);
-        m_hinstAMSI = NULL;
-    }
-#endif
+    PAMSIXX::unload();
 }
 
 BOOL AmsiScanner::IsLoaded() const
 {
-#ifdef WRAP_AMSI
-    return m_hinstAMSI != NULL && m_hContext != NULL;
-#else
-    return m_hContext != NULL;
-#endif
+    return m_hinst != NULL && m_hContext != NULL;
 }
 
 AmsiScanner::~AmsiScanner()
@@ -138,17 +117,17 @@ HRESULT AmsiScanner::LoadSample(SAMPLE& sample, const WCHAR *filename)
 
     GetFullPathNameW(filename, ARRAYSIZE(sample.pathname), sample.pathname, NULL);
 
-    HANDLE hFile = CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL,
-                               OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+    HANDLE hFile = ::CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL,
+                                 OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
     if (hFile == INVALID_HANDLE_VALUE)
     {
         return E_FAIL;
     }
 
-    DWORD dwFileSize = GetFileSize(hFile, NULL);
+    DWORD dwFileSize = ::GetFileSize(hFile, NULL);
     if (dwFileSize == INVALID_FILE_SIZE)
     {
-        CloseHandle(hFile);
+        ::CloseHandle(hFile);
         return E_FAIL;
     }
 
@@ -158,21 +137,21 @@ HRESULT AmsiScanner::LoadSample(SAMPLE& sample, const WCHAR *filename)
         buffer = (BYTE *)std::malloc(dwFileSize);
         if (!buffer)
         {
-            CloseHandle(hFile);
+            ::CloseHandle(hFile);
             return E_OUTOFMEMORY;
         }
 
         DWORD cbRead;
-        if (!ReadFile(hFile, buffer, dwFileSize, &cbRead, NULL) ||
+        if (!::ReadFile(hFile, buffer, dwFileSize, &cbRead, NULL) ||
             cbRead != dwFileSize)
         {
             std::free(buffer);
-            CloseHandle(hFile);
+            ::CloseHandle(hFile);
             return E_FAIL;
         }
     }
 
-    CloseHandle(hFile);
+    ::CloseHandle(hFile);
 
     sample.data = buffer;
     sample.size = dwFileSize;

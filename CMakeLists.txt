@@ -7,7 +7,7 @@
 cmake_minimum_required(VERSION 2.4)
 
 # project name and language
-project(AmsiScanner CXX)
+project(amsiscan C CXX)
 
 # check build type
 if (NOT CMAKE_BUILD_TYPE)
@@ -59,23 +59,17 @@ endif()
 
 ##############################################################################
 
-# option
-option(WRAP_AMSI "Wrap AMSI" ON)
+# libpamsi.a
+add_library(pamsi STATIC pamsi.c)
 
-# status
-message(STATUS "WRAP_AMSI: ${WRAP_AMSI}")
+# libpamsixx.a
+add_library(pamsixx STATIC pamsixx.cpp)
 
-# executable
-if (WRAP_AMSI)
-    add_executable(AmsiScanner pamsi.cpp AmsiScanner.cpp AmsiScannerMain.cpp)
-else()
-    add_executable(AmsiScanner AmsiScanner.cpp AmsiScannerMain.cpp)
-endif()
+# libAmsiScanner.a
+add_library(AmsiScanner STATIC pamsixx.cpp AmsiScanner.cpp)
 
-# definitions for pamsi
-target_compile_definitions(AmsiScanner PRIVATE -DUNICODE -D_UNICODE)
-if (WRAP_AMSI)
-    target_compile_definitions(AmsiScanner PRIVATE -DWRAP_AMSI)
-endif()
+# amsiscan.exe
+add_executable(amsiscan amsiscan.cpp)
+target_link_libraries(amsiscan PRIVATE pamsixx AmsiScanner)
 
 ##############################################################################
