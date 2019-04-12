@@ -97,6 +97,7 @@ extern "C" {
     extern AMSICLOSESESSION g_pAmsiCloseSession;
     extern AMSISCANSTRING g_pAmsiScanString;
     extern AMSISCANBUFFER g_pAmsiScanBuffer;
+
     #define AmsiInitialize (*g_pAmsiInitialize)
     #define AmsiUninitialize (*g_pAmsiUninitialize)
     #define AmsiOpenSession (*g_pAmsiOpenSession)
