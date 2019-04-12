@@ -53,6 +53,6 @@ extern "C"
         g_pAmsiScanString = NULL;
         g_pAmsiScanBuffer = NULL;
     }
-}
+} // extern "C"
 
 #endif  // def WRAP_AMSI
