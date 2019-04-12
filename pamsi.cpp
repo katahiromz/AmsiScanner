@@ -23,7 +23,7 @@ extern "C"
 
 #define GET_PROC(name) get_proc(g_p##name, hinst, #name)
 
-    HINSTANCE APIENTRY LoadAmsi(void)
+    HINSTANCE APIENTRY PAMSI_Load(void)
     {
         HINSTANCE hinst = LoadLibraryA(AMSIDLL);
         if (hinst)
@@ -43,7 +43,7 @@ extern "C"
         return NULL;
     }
 
-    void APIENTRY UnLoadAmsi(HINSTANCE hinst)
+    void APIENTRY PAMSI_Unload(HINSTANCE hinst)
     {
         FreeLibrary(hinst);
         g_pAmsiInitialize = NULL;

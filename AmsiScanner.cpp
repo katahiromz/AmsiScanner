@@ -23,7 +23,7 @@ BOOL AmsiScanner::Load(LPCWSTR appName)
     Free();
 
 #ifdef WRAP_AMSI
-    m_hinstAMSI = LoadAmsi();
+    m_hinstAMSI = PAMSI_Load();
     if (m_hinstAMSI == NULL)
         return FALSE;
 #endif
@@ -49,7 +49,7 @@ void AmsiScanner::Free()
 #ifdef WRAP_AMSI
     if (m_hinstAMSI)
     {
-        UnLoadAmsi(m_hinstAMSI);
+        PAMSI_Unload(m_hinstAMSI);
         m_hinstAMSI = NULL;
     }
 #endif

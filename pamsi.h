@@ -88,8 +88,8 @@ extern "C" {
         HAMSISESSION amsiSession,
         AMSI_RESULT* result);
 
-    HINSTANCE APIENTRY LoadAmsi(void);
-    void APIENTRY UnLoadAmsi(HINSTANCE hinst);
+    HINSTANCE APIENTRY PAMSI_Load(void);
+    void APIENTRY PAMSI_Unload(HINSTANCE hinst);
 
     extern AMSIINITIALIZE g_pAmsiInitialize;
     extern AMSIUNINITIALIZE g_pAmsiUninitialize;
