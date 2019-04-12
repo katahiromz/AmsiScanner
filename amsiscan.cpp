@@ -33,7 +33,7 @@ int wmain(int argc, wchar_t **wargv)
 
     if (!scanner.IsLoaded())
     {
-        printf("ERROR: Unable to initialize the AMSI module.\n");
+        fprintf(stderr, "ERROR: unable to initialize the AMSI module.\n");
         return 2;
     }
 
@@ -41,7 +41,7 @@ int wmain(int argc, wchar_t **wargv)
     HRESULT hr = scanner.OpenSession(&hSession);
     if (FAILED(hr))
     {
-        printf("ERROR: Unable to open AMSI session.\n");
+        fprintf(stderr, "ERROR: unable to open AMSI session.\n");
         return 3;
     }
 
@@ -50,6 +50,19 @@ int wmain(int argc, wchar_t **wargv)
     int total_count = 0, not_detected = 0, detected = 0, unknown = 0;
     for (int i = 1; i < argc; ++i, ++total_count)
     {
+        if (wargv[i][0] == L'-' || wargv[i][0] == L'/')
+        {
+            fprintf(stderr, "ERROR: invalid argument '%ls'.\n", wargv[i]);
+            hr = E_INVALIDARG;
+            break;
+        }
+        if (GetFileAttributesW(wargv[i]) == 0xFFFFFFFF)
+        {
+            fprintf(stderr, "ERROR: file not found '%ls'.\n", wargv[i]);
+            hr = E_INVALIDARG;
+            break;
+        }
+
         result.init();
 
         hr = scanner.LoadSample(sample, wargv[i]);
@@ -59,24 +72,25 @@ int wmain(int argc, wchar_t **wargv)
         }
         if (FAILED(hr))
         {
-            printf("ERROR: ScanSample failed\n");
+            fprintf(stderr, "ERROR: scan failed.\n");
+            break;
         }
 
         if (result.IsUnknown)
         {
-            printf("[%d] %ls: UNKNOWN: %s\n", total_count + 1, sample.pathname,
+            printf("[%d] %ls: UNKNOWN: %s\n", total_count + 1, wargv[i],
                    result.result_string());
             ++unknown;
         }
         else if (result.IsMalware)
         {
-            printf("[%d] %ls: MALWARE: %s\n", total_count + 1, sample.pathname,
+            printf("[%d] %ls: MALWARE: %s\n", total_count + 1, wargv[i],
                    result.result_string());
             ++detected;
         }
         else
         {
-            printf("[%d] %ls: NOT DETECTED: %s\n", total_count + 1, sample.pathname,
+            printf("[%d] %ls: NOT DETECTED: %s\n", total_count + 1, wargv[i],
                    result.result_string());
             ++not_detected;
         }
@@ -86,6 +100,10 @@ int wmain(int argc, wchar_t **wargv)
 
     scanner.CloseSession(&hSession);
 
+    if (FAILED(hr))
+    {
+        return 3;
+    }
     if (detected)
     {
         printf("# DETECTED.\n");
