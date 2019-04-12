@@ -13,7 +13,7 @@ int wmain(int argc, wchar_t **wargv)
         return 1;
     }
 
-    AmsiScanner scanner(L"AmsiTest");
+    AmsiScanner scanner(L"katahiromz's AmsiScanner");
 
     if (!scanner.IsLoaded())
     {
