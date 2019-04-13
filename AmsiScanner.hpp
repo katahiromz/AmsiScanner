@@ -1,6 +1,6 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 9
+#define AMSI_SCANNER_HPP_ 10
 
 #include "pamsixx.hpp"
 #include <cstdlib>
@@ -18,6 +18,10 @@ struct AmsiSample
     void init();
     HRESULT load(LPCWSTR filename);
     void free();
+
+private:
+    AmsiSample(const AmsiSample&);
+    AmsiSample& operator=(const AmsiSample&);
 };
 
 //////////////////////////////////////////////////////////////////////////////
