@@ -63,7 +63,7 @@ const char *AmsiScanner::SCAN_RESULT::result_string() const
     }
 }
 
-HRESULT AmsiScanner::SAMPLE::load(const WCHAR *filename)
+HRESULT AmsiScanner::SAMPLE::load(LPCWSTR filename)
 {
     free();
 

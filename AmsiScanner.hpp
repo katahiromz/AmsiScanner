@@ -37,7 +37,7 @@ public:
         SAMPLE();
         ~SAMPLE();
         void init();
-        HRESULT load(const WCHAR *filename);
+        HRESULT load(LPCWSTR filename);
         void free();
     };
 
