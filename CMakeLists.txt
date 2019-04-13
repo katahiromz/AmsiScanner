@@ -66,23 +66,19 @@ if (HAVE_AMSI_H)
     add_definitions(-DHAVE_AMSI_H)
 endif()
 
-# WRAP_AMSI
-option(WRAP_AMSI "Wrap AMSI" ON)
-
-# libpamsi.a
-add_library(pamsi STATIC pamsi.c)
-if (WRAP_AMSI)
-    target_compile_definitions(pamsi PRIVATE -DWRAP_AMSI)
+# PAMSIXX_STATIC
+option(PAMSIXX_STATIC "PAMSI++ static" OFF)
+if (HAVE_AMSI_H AND PAMSIXX_STATIC)
+    add_definitions(-DPAMSIXX_STATIC)
+else()
+    set(PAMSIXX_STATIC OFF)
 endif()
-
-# libpamsixx.a
-add_library(pamsixx STATIC pamsixx.cpp)
-
-# libAmsiScanner.a
-add_library(AmsiScanner STATIC pamsixx.cpp AmsiScanner.cpp pamsixx)
+message(STATUS "PAMSIXX_STATIC: ${PAMSIXX_STATIC}")
 
 # amsiscan.exe
-add_executable(amsiscan amsiscan.cpp)
-target_link_libraries(amsiscan PRIVATE AmsiScanner)
+add_executable(amsiscan amsiscan.cpp AmsiScanner.cpp)
+if (HAVE_AMSI_H AND PAMSIXX_STATIC)
+    target_link_libraries(amsiscan PRIVATE amsi)
+endif()
 
 ##############################################################################
