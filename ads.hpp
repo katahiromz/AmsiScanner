@@ -1,6 +1,8 @@
-// alternative data stream
+// ADS (alternative data stream) support
+// Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.coM.
+// This file is public domain software.
 #ifndef ADS_HPP_
-#define ADS_HPP_ 1
+#define ADS_HPP_ 2
 
 #ifndef _INC_WINDOWS
     #include <windows.h>

@@ -123,7 +123,6 @@ HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, AmsiSample& sample,
 HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
                                 AmsiResult& result)
 {
-    // TODO: alternative data stream
     HRESULT hr;
 
     {
@@ -151,8 +150,6 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
 
     for (size_t i = 0; i < entries.size(); ++i)
     {
-        printf("%ls\n", entries[i].name.c_str());
-
         std::string data;
         hr = get_ads_file(filename, entries[i], data);
         if (0 && FAILED(hr))

@@ -1,3 +1,7 @@
+// ADS (alternative data stream) support
+// Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.coM.
+// This file is public domain software.
+
 #include "ads.hpp"
 
 HRESULT read_ads_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
