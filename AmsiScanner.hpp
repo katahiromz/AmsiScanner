@@ -44,7 +44,7 @@ public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
-    HRESULT ScanSample(HAMSISESSION hSession, SAMPLE& sample, SCAN_RESULT& result);
+    HRESULT DoScan(HAMSISESSION hSession, SAMPLE& sample, SCAN_RESULT& result);
 
 protected:
     HAMSICONTEXT m_hContext;

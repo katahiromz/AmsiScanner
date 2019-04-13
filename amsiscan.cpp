@@ -67,7 +67,7 @@ int wmain(int argc, wchar_t **wargv)
         hr = sample.load(wargv[i]);
         if (SUCCEEDED(hr))
         {
-            hr = scanner.ScanSample(hSession, sample, result);
+            hr = scanner.DoScan(hSession, sample, result);
         }
         if (FAILED(hr))
         {

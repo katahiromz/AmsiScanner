@@ -18,8 +18,8 @@ BOOL AmsiScanner::Load(LPCWSTR appName)
     return TRUE;
 }
 
-HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, SAMPLE& sample,
-                                SCAN_RESULT& result)
+HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, SAMPLE& sample,
+                            SCAN_RESULT& result)
 {
     result.init();
 
