@@ -1,6 +1,6 @@
 // AmsiScanner.cpp
 #include "AmsiScanner.hpp"
-#include <cstdio>
+
 BOOL AmsiScanner::Load(LPCWSTR appName)
 {
     Free();
