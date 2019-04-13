@@ -1,9 +1,39 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 6
+#define AMSI_SCANNER_HPP_ 7
 
 #include "pamsixx.hpp"
 #include <cstdlib>
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct AmsiSample
+{
+    void *m_data;     // malloc'ed
+    DWORD m_size;
+    WCHAR m_pathname[MAX_PATH];
+
+    AmsiSample();
+    ~AmsiSample();
+    void init();
+    HRESULT load(LPCWSTR filename);
+    void free();
+};
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct AmsiResult
+{
+    AMSI_RESULT value;
+    BOOL is_malware;
+    BOOL is_unknown;
+
+    AmsiResult();
+    void init();
+    const char *result_string() const;
+};
+
+//////////////////////////////////////////////////////////////////////////////
 
 class AmsiScanner : public PAMSIXX
 {
@@ -17,39 +47,56 @@ public:
     void Free();
 
 public:
-    struct SCAN_RESULT
-    {
-        AMSI_RESULT value;
-        BOOL is_malware;
-        BOOL is_unknown;
-
-        SCAN_RESULT();
-        void init();
-        const char *result_string() const;
-    };
-
-    struct SAMPLE
-    {
-        void *m_data;     // malloc'ed
-        DWORD m_size;
-        WCHAR m_pathname[MAX_PATH];
-
-        SAMPLE();
-        ~SAMPLE();
-        void init();
-        HRESULT load(LPCWSTR filename);
-        void free();
-    };
-
-public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
-    HRESULT DoScan(HAMSISESSION hSession, SAMPLE& sample, SCAN_RESULT& result);
+    HRESULT DoScan(HAMSISESSION hSession, AmsiSample& sample, AmsiResult& result);
 
 protected:
     HAMSICONTEXT m_hContext;
 };
+
+//////////////////////////////////////////////////////////////////////////////
+// AmsiSample inlines
+
+inline AmsiSample::AmsiSample()
+{
+    init();
+}
+
+inline void AmsiSample::free()
+{
+    std::free(m_data);
+    m_data = NULL;
+    m_size = 0;
+}
+
+inline AmsiSample::~AmsiSample()
+{
+    free();
+}
+
+inline void AmsiSample::init()
+{
+    m_data = NULL;
+    m_size = 0;
+    m_pathname[0] = 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// AmsiResult inlines
+
+inline AmsiResult::AmsiResult()
+{
+    init();
+}
+
+inline void AmsiResult::init()
+{
+    value = AMSI_RESULT_NOT_DETECTED;
+    is_malware = FALSE;
+    is_unknown = TRUE;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -60,11 +107,6 @@ inline AmsiScanner::AmsiScanner() : m_hContext(NULL)
 inline AmsiScanner::AmsiScanner(LPCWSTR appName) : m_hContext(NULL)
 {
     Load(appName);
-}
-
-inline AmsiScanner::SCAN_RESULT::SCAN_RESULT()
-{
-    init();
 }
 
 inline BOOL AmsiScanner::IsLoaded() const
@@ -101,37 +143,6 @@ inline void AmsiScanner::Free()
     }
 
     PAMSIXX::unload_amsi();
-}
-
-inline void AmsiScanner::SCAN_RESULT::init()
-{
-    value = AMSI_RESULT_NOT_DETECTED;
-    is_malware = FALSE;
-    is_unknown = TRUE;
-}
-
-inline AmsiScanner::SAMPLE::SAMPLE()
-{
-    init();
-}
-
-inline void AmsiScanner::SAMPLE::free()
-{
-    std::free(m_data);
-    m_data = NULL;
-    m_size = 0;
-}
-
-inline AmsiScanner::SAMPLE::~SAMPLE()
-{
-    free();
-}
-
-inline void AmsiScanner::SAMPLE::init()
-{
-    m_data = NULL;
-    m_size = 0;
-    m_pathname[0] = 0;
 }
 
 #endif  // ndef AMSI_SCANNER_HPP_

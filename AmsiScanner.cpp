@@ -1,69 +1,10 @@
 // AmsiScanner.cpp
 #include "AmsiScanner.hpp"
 
-BOOL AmsiScanner::Load(LPCWSTR appName)
-{
-    Free();
+//////////////////////////////////////////////////////////////////////////////
+// AmsiSample
 
-    if (!PAMSIXX::load_amsi())
-        return FALSE;
-
-    HRESULT hr;
-    hr = AmsiInitialize(appName, &m_hContext);
-    if (FAILED(hr))
-    {
-        Free();
-        return FALSE;
-    }
-    return TRUE;
-}
-
-HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, SAMPLE& sample,
-                            SCAN_RESULT& result)
-{
-    result.init();
-
-    if (sample.m_size == 0)
-    {
-        result.is_unknown = FALSE;
-        result.is_malware = FALSE;
-        return S_OK;
-    }
-
-    HRESULT hr;
-    hr = AmsiScanBuffer(m_hContext, sample.m_data, sample.m_size, sample.m_pathname,
-                        hSession, &result.value);
-    if (hr == S_OK)
-    {
-        result.is_unknown = FALSE;
-        result.is_malware = AmsiResultIsMalware(result.value);
-    }
-    return hr;
-}
-
-const char *AmsiScanner::SCAN_RESULT::result_string() const
-{
-    if (is_unknown)
-        return "Unknown";
-
-    switch (value)
-    {
-    case AMSI_RESULT_CLEAN:
-        return "File is clean";
-    case AMSI_RESULT_NOT_DETECTED:
-        return "No threat detected";
-    case AMSI_RESULT_BLOCKED_BY_ADMIN_START:
-        return "Threat is blocked by the administrator";
-    case AMSI_RESULT_BLOCKED_BY_ADMIN_END:
-        return "Threat is blocked by the administrator";
-    case AMSI_RESULT_DETECTED:
-        return "File is considered malware";
-    default:
-        return "N/A";
-    }
-}
-
-HRESULT AmsiScanner::SAMPLE::load(LPCWSTR filename)
+HRESULT AmsiSample::load(LPCWSTR filename)
 {
     free();
 
@@ -107,4 +48,72 @@ HRESULT AmsiScanner::SAMPLE::load(LPCWSTR filename)
     m_data = buffer;
     m_size = dwFileSize;
     return S_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// AmsiResult
+
+const char *AmsiResult::result_string() const
+{
+    if (is_unknown)
+        return "Unknown";
+
+    switch (value)
+    {
+    case AMSI_RESULT_CLEAN:
+        return "File is clean";
+    case AMSI_RESULT_NOT_DETECTED:
+        return "No threat detected";
+    case AMSI_RESULT_BLOCKED_BY_ADMIN_START:
+        return "Threat is blocked by the administrator";
+    case AMSI_RESULT_BLOCKED_BY_ADMIN_END:
+        return "Threat is blocked by the administrator";
+    case AMSI_RESULT_DETECTED:
+        return "File is considered malware";
+    default:
+        return "N/A";
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// AmsiScanner
+
+BOOL AmsiScanner::Load(LPCWSTR appName)
+{
+    Free();
+
+    if (!PAMSIXX::load_amsi())
+        return FALSE;
+
+    HRESULT hr;
+    hr = AmsiInitialize(appName, &m_hContext);
+    if (FAILED(hr))
+    {
+        Free();
+        return FALSE;
+    }
+    return TRUE;
+}
+
+HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, AmsiSample& sample,
+                            AmsiResult& result)
+{
+    result.init();
+
+    if (sample.m_size == 0)
+    {
+        result.is_unknown = FALSE;
+        result.is_malware = FALSE;
+        return S_OK;
+    }
+
+    HRESULT hr;
+    hr = AmsiScanBuffer(m_hContext, sample.m_data, sample.m_size, sample.m_pathname,
+                        hSession, &result.value);
+    if (hr == S_OK)
+    {
+        result.is_unknown = FALSE;
+        result.is_malware = AmsiResultIsMalware(result.value);
+    }
+    return hr;
 }

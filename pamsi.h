@@ -62,24 +62,24 @@ extern "C" {
 #endif  // ndef HAVE_AMSI_H
 
 /* for LoadLibrary */
-typedef HRESULT (STDAPICALLTYPE *AMSIINITIALIZE)(
+typedef HRESULT (STDAPICALLTYPE *FN_AmsiInitialize)(
     LPCWSTR appName,
     HAMSICONTEXT* amsiContext);
-typedef VOID (STDAPICALLTYPE *AMSIUNINITIALIZE)(
+typedef VOID (STDAPICALLTYPE *FN_AmsiUninitialize)(
     HAMSICONTEXT amsiContext);
-typedef HRESULT (STDAPICALLTYPE *AMSIOPENSESSION)(
+typedef HRESULT (STDAPICALLTYPE *FN_AmsiOpenSession)(
     HAMSICONTEXT amsiContext,
     HAMSISESSION* amsiSession);
-typedef VOID (STDAPICALLTYPE *AMSICLOSESESSION)(
+typedef VOID (STDAPICALLTYPE *FN_AmsiCloseSession)(
     HAMSICONTEXT amsiContext,
     HAMSISESSION amsiSession);
-typedef HRESULT (STDAPICALLTYPE *AMSISCANSTRING)(
+typedef HRESULT (STDAPICALLTYPE *FN_AmsiScanString)(
     HAMSICONTEXT amsiContext,
     LPCWSTR string,
     LPCWSTR contentName,
     HAMSISESSION amsiSession,
     AMSI_RESULT* result);
-typedef HRESULT (STDAPICALLTYPE *AMSISCANBUFFER)(
+typedef HRESULT (STDAPICALLTYPE *FN_AmsiScanBuffer)(
     HAMSICONTEXT amsiContext,
     PVOID buffer,
     ULONG length,
@@ -93,12 +93,12 @@ typedef HRESULT (STDAPICALLTYPE *AMSISCANBUFFER)(
     HINSTANCE APIENTRY PAMSI_Load(void);
     void APIENTRY PAMSI_Unload(HINSTANCE hinst);
 
-    extern AMSIINITIALIZE g_pAmsiInitialize;
-    extern AMSIUNINITIALIZE g_pAmsiUninitialize;
-    extern AMSIOPENSESSION g_pAmsiOpenSession;
-    extern AMSICLOSESESSION g_pAmsiCloseSession;
-    extern AMSISCANSTRING g_pAmsiScanString;
-    extern AMSISCANBUFFER g_pAmsiScanBuffer;
+    extern FN_AmsiInitialize g_pAmsiInitialize;
+    extern FN_AmsiUninitialize g_pAmsiUninitialize;
+    extern FN_AmsiOpenSession g_pAmsiOpenSession;
+    extern FN_AmsiCloseSession g_pAmsiCloseSession;
+    extern FN_AmsiScanString g_pAmsiScanString;
+    extern FN_AmsiScanBuffer g_pAmsiScanBuffer;
 
     #define AmsiInitialize (*g_pAmsiInitialize)
     #define AmsiUninitialize (*g_pAmsiUninitialize)

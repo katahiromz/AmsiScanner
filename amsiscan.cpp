@@ -11,7 +11,7 @@ void show_help(void)
 
 void show_version(void)
 {
-    printf("amsiscan 1.1 by katahiromz\n");
+    printf("amsiscan 1.2 by katahiromz\n");
 }
 
 extern "C"
@@ -61,8 +61,8 @@ int wmain(int argc, wchar_t **wargv)
             break;
         }
 
-        AmsiScanner::SCAN_RESULT result;
-        AmsiScanner::SAMPLE sample;
+        AmsiResult result;
+        AmsiSample sample;
 
         hr = sample.load(wargv[i]);
         if (SUCCEEDED(hr))

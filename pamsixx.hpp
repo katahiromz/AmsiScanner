@@ -15,21 +15,13 @@ public:
 
 #ifndef PAMSIXX_STATIC
     HINSTANCE m_hinst;
-    AMSIINITIALIZE AmsiInitialize;
-    AMSIUNINITIALIZE AmsiUninitialize;
-    AMSIOPENSESSION AmsiOpenSession;
-    AMSICLOSESESSION AmsiCloseSession;
-    AMSISCANSTRING AmsiScanString;
-    AMSISCANBUFFER AmsiScanBuffer;
+    FN_AmsiInitialize AmsiInitialize;
+    FN_AmsiUninitialize AmsiUninitialize;
+    FN_AmsiOpenSession AmsiOpenSession;
+    FN_AmsiCloseSession AmsiCloseSession;
+    FN_AmsiScanString AmsiScanString;
+    FN_AmsiScanBuffer AmsiScanBuffer;
 #endif
-
-protected:
-    template <typename T_PROC>
-    bool get_proc(T_PROC& fn, HINSTANCE hInst, const char *name)
-    {
-        fn = reinterpret_cast<T_PROC>(GetProcAddress(hInst, name));
-        return fn != NULL;
-    }
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -58,17 +50,17 @@ inline bool PAMSIXX::load_amsi()
     m_hinst = LoadLibraryA(AMSI_DLL);
     if (m_hinst)
     {
-# define PAMSIXX_GETPROC(name) get_proc(name, m_hinst, #name)
-        if (PAMSIXX_GETPROC(AmsiInitialize) &&
-            PAMSIXX_GETPROC(AmsiUninitialize) &&
-            PAMSIXX_GETPROC(AmsiOpenSession) &&
-            PAMSIXX_GETPROC(AmsiCloseSession) &&
-            PAMSIXX_GETPROC(AmsiScanString) &&
-            PAMSIXX_GETPROC(AmsiScanBuffer))
+# define PAMSIXX_GET_PROC(fn) (fn = (FN_##fn)GetProcAddress(m_hinst, #fn)) != NULL
+        if (PAMSIXX_GET_PROC(AmsiInitialize) &&
+            PAMSIXX_GET_PROC(AmsiUninitialize) &&
+            PAMSIXX_GET_PROC(AmsiOpenSession) &&
+            PAMSIXX_GET_PROC(AmsiCloseSession) &&
+            PAMSIXX_GET_PROC(AmsiScanString) &&
+            PAMSIXX_GET_PROC(AmsiScanBuffer))
         {
             return true;
         }
-# undef PAMSIXX_GETPROC
+# undef PAMSIXX_GET_PROC
         FreeLibrary(m_hinst);
     }
     AmsiInitialize = NULL;
