@@ -1,6 +1,7 @@
 # AmsiScanner by katahiromz
 
 ## What's this?
+
 This library provides C/C++ threat detector for Windows 10 applications by using the AMSI (Antimalware Scan Interface) component of Windows 10.
 Windows 10 contains `amsi.dll` DLL file, that provides AMSI.
 

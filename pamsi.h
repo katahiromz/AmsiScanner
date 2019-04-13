@@ -1,6 +1,6 @@
 /* portable AMSI interface by katahiromz */
 #ifndef PAMSI_H_
-#define PAMSI_H_    2
+#define PAMSI_H_    3
 
 #ifndef _INC_WINDOWS
     #include <windows.h>
@@ -25,7 +25,7 @@ extern "C" {
         AMSI_RESULT_NOT_DETECTED = 1,
         AMSI_RESULT_BLOCKED_BY_ADMIN_START = 0x4000,
         AMSI_RESULT_BLOCKED_BY_ADMIN_END = 0x4FFF,
-        AMSI_RESULT_DETECTED = 32768
+        AMSI_RESULT_DETECTED = 0x8000
     } AMSI_RESULT;
 
     STDAPI AmsiInitialize(
