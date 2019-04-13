@@ -59,3 +59,12 @@ int wmain(int argc, WCHAR **wargv)
 
     return 1;
 }
+
+int main(int argc, char **argv)
+{
+    int argc0;
+    LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc0);
+    int ret = wmain(argc0, wargv);
+    LocalFree(wargv);
+    return ret;
+}

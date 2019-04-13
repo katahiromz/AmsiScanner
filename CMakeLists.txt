@@ -81,4 +81,7 @@ if (HAVE_AMSI_H AND PAMSIXX_STATIC)
     target_link_libraries(amsiscan PRIVATE amsi)
 endif()
 
+# ads_test.exe
+add_executable(ads_test ads_test.cpp ads.cpp)
+
 ##############################################################################

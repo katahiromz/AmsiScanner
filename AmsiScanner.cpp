@@ -150,23 +150,28 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
 
     for (size_t i = 0; i < entries.size(); ++i)
     {
+        //printf("name: %ls\n", entries[i].name.c_str());
+
         std::string data;
         hr = get_ads_file(filename, entries[i], data);
-        if (0 && FAILED(hr))
-        {
-            break;
-        }
 
         AmsiSample sample;
-        sample.m_data = &data[0];
-        sample.m_size = (DWORD)data.size();
-        sample.m_pathname = pathname;
-        sample.m_pathname += entries[i].name;
-
-        hr = DoScan(hSession, sample, result);
         if (FAILED(hr))
         {
             is_unknown = is_failed = TRUE;
+        }
+        else
+        {
+            sample.m_data = &data[0];
+            sample.m_size = (DWORD)data.size();
+            sample.m_pathname = pathname;
+            sample.m_pathname += entries[i].name;
+
+            hr = DoScan(hSession, sample, result);
+            if (FAILED(hr))
+            {
+                is_unknown = is_failed = TRUE;
+            }
         }
 
         if (result.is_malware)

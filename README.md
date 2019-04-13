@@ -5,6 +5,8 @@
 This library provides C/C++ threat detector for Windows 10 applications by using the AMSI (Antimalware Scan Interface) component of Windows 10.
 Windows 10 contains `amsi.dll` DLL file, that provides AMSI.
 
+This library supports ADS (alternative data stream).
+
 ## Files
 
 File `pamsi.h` is a portable C/C++ AMSI header.
