@@ -117,3 +117,16 @@ HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, AmsiSample& sample,
     }
     return hr;
 }
+
+HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
+                                AmsiResult& result)
+{
+    // TODO: alternative data stream
+    AmsiSample sample;
+    HRESULT hr = sample.load(filename);
+    if (SUCCEEDED(hr))
+    {
+        hr = DoScan(hSession, sample, result);
+    }
+    return hr;
+}

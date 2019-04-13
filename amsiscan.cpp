@@ -11,7 +11,7 @@ void show_help(void)
 
 void show_version(void)
 {
-    printf("amsiscan 1.2 by katahiromz\n");
+    printf("amsiscan 1.3 by katahiromz\n");
 }
 
 extern "C"
@@ -62,13 +62,7 @@ int wmain(int argc, wchar_t **wargv)
         }
 
         AmsiResult result;
-        AmsiSample sample;
-
-        hr = sample.load(wargv[i]);
-        if (SUCCEEDED(hr))
-        {
-            hr = scanner.DoScan(hSession, sample, result);
-        }
+        hr = scanner.DoScanFile(hSession, wargv[i], result);
         if (FAILED(hr))
         {
             fprintf(stderr, "ERROR: scan failed.\n");

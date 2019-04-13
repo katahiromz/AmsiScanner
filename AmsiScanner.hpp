@@ -1,6 +1,6 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 8
+#define AMSI_SCANNER_HPP_ 9
 
 #include "pamsixx.hpp"
 #include <cstdlib>
@@ -50,6 +50,7 @@ public:
     void CloseSession(HAMSISESSION *phSession);
 
     HRESULT DoScan(HAMSISESSION hSession, AmsiSample& sample, AmsiResult& result);
+    HRESULT DoScanFile(HAMSISESSION hSession, LPCWSTR filename, AmsiResult& result);
 
 protected:
     HAMSICONTEXT m_hContext;
