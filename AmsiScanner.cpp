@@ -24,7 +24,7 @@ HRESULT AmsiSample::load(LPCWSTR filename)
         return E_FAIL;
     }
 
-    BYTE *buffer = reinterpret_cast<BYTE *>(std::malloc(dwFileSize ? dwFileSize : 1));
+    LPBYTE buffer = reinterpret_cast<LPBYTE>(std::malloc(dwFileSize ? dwFileSize : 1));
     if (!buffer)
     {
         ::CloseHandle(hFile);
