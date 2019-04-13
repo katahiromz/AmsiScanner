@@ -1,6 +1,6 @@
 // AmsiScanner.cpp
 #include "AmsiScanner.hpp"
-
+#include <cstdio>
 BOOL AmsiScanner::Load(LPCWSTR appName)
 {
     Free();
@@ -22,6 +22,13 @@ HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, SAMPLE& sample,
                             SCAN_RESULT& result)
 {
     result.init();
+
+    if (sample.m_size == 0)
+    {
+        result.is_unknown = FALSE;
+        result.is_malware = FALSE;
+        return S_OK;
+    }
 
     HRESULT hr;
     hr = AmsiScanBuffer(m_hContext, sample.m_data, sample.m_size, sample.m_pathname,
@@ -74,16 +81,15 @@ HRESULT AmsiScanner::SAMPLE::load(const WCHAR *filename)
         return E_FAIL;
     }
 
-    BYTE *buffer = NULL;
+    BYTE *buffer = (BYTE *)std::malloc(dwFileSize ? dwFileSize : 1);
+    if (!buffer)
+    {
+        ::CloseHandle(hFile);
+        return E_OUTOFMEMORY;
+    }
+
     if (dwFileSize > 0)
     {
-        buffer = (BYTE *)std::malloc(dwFileSize);
-        if (!buffer)
-        {
-            ::CloseHandle(hFile);
-            return E_OUTOFMEMORY;
-        }
-
         DWORD cbRead;
         if (!::ReadFile(hFile, buffer, dwFileSize, &cbRead, NULL) ||
             cbRead != dwFileSize)
