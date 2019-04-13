@@ -46,7 +46,6 @@ public:
     BOOL IsLoaded() const;
     void Free();
 
-public:
     HRESULT OpenSession(HAMSISESSION *phSession);
     void CloseSession(HAMSISESSION *phSession);
 
