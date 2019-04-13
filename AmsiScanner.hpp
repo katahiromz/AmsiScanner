@@ -3,6 +3,7 @@
 #define AMSI_SCANNER_HPP_ 10
 
 #include "pamsixx.hpp"
+#include "ads.hpp"
 #include <cstdlib>
 
 //////////////////////////////////////////////////////////////////////////////
@@ -11,7 +12,7 @@ struct AmsiSample
 {
     void *m_data;     // malloc'ed
     DWORD m_size;
-    WCHAR m_pathname[MAX_PATH];
+    std::wstring m_pathname;
 
     AmsiSample();
     ~AmsiSample();

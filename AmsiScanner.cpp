@@ -8,7 +8,9 @@ HRESULT AmsiSample::load(LPCWSTR filename)
 {
     free();
 
-    GetFullPathNameW(filename, ARRAYSIZE(m_pathname), m_pathname, NULL);
+    WCHAR pathname[MAX_PATH];
+    GetFullPathNameW(filename, ARRAYSIZE(pathname), pathname, NULL);
+    m_pathname = pathname;
 
     HANDLE hFile = ::CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL,
                                  OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
@@ -108,8 +110,8 @@ HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, AmsiSample& sample,
     }
 
     HRESULT hr;
-    hr = AmsiScanBuffer(m_hContext, sample.m_data, sample.m_size, sample.m_pathname,
-                        hSession, &result.value);
+    hr = AmsiScanBuffer(m_hContext, sample.m_data, sample.m_size,
+                        sample.m_pathname.c_str(), hSession, &result.value);
     if (hr == S_OK)
     {
         result.is_unknown = FALSE;
@@ -122,11 +124,84 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
                                 AmsiResult& result)
 {
     // TODO: alternative data stream
-    AmsiSample sample;
-    HRESULT hr = sample.load(filename);
-    if (SUCCEEDED(hr))
+    HRESULT hr;
+
     {
-        hr = DoScan(hSession, sample, result);
+        AmsiSample sample;
+        hr = sample.load(filename);
+        if (SUCCEEDED(hr))
+        {
+            hr = DoScan(hSession, sample, result);
+            if (result.is_malware)
+                return hr;
+        }
     }
+
+    std::vector<ADS_ENTRY> entries;
+    hr = get_ads_entries(filename, entries);
+    if (FAILED(hr) || entries.empty())
+        return S_OK;
+
+    WCHAR pathname[MAX_PATH];
+    GetFullPathNameW(filename, ARRAYSIZE(pathname), pathname, NULL);
+
+    BOOL is_malware = result.is_malware;
+    BOOL is_unknown = result.is_unknown;
+    BOOL is_failed = FALSE;
+
+    for (size_t i = 0; i < entries.size(); ++i)
+    {
+        printf("%ls\n", entries[i].name.c_str());
+
+        std::string data;
+        hr = get_ads_file(filename, entries[i], data);
+        if (0 && FAILED(hr))
+        {
+            break;
+        }
+
+        AmsiSample sample;
+        sample.m_data = &data[0];
+        sample.m_size = (DWORD)data.size();
+        sample.m_pathname = pathname;
+        sample.m_pathname += entries[i].name;
+
+        hr = DoScan(hSession, sample, result);
+        if (FAILED(hr))
+        {
+            is_unknown = is_failed = TRUE;
+        }
+
+        if (result.is_malware)
+        {
+            is_malware = TRUE;
+        }
+        if (result.is_unknown)
+        {
+            is_unknown = TRUE;
+        }
+
+        sample.init();
+    }
+
+    if (is_malware)
+    {
+        result.is_malware = TRUE;
+        result.is_unknown = FALSE;
+        hr = S_OK;
+    }
+    else
+    {
+        if (is_unknown)
+        {
+            result.is_unknown = TRUE;
+        }
+
+        if (is_failed && SUCCEEDED(hr))
+        {
+            hr = E_FAIL;
+        }
+    }
+
     return hr;
 }

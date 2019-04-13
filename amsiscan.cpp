@@ -11,7 +11,7 @@ void show_help(void)
 
 void show_version(void)
 {
-    printf("amsiscan 1.3 by katahiromz\n");
+    printf("amsiscan 1.4 by katahiromz\n");
 }
 
 extern "C"
@@ -94,15 +94,15 @@ int wmain(int argc, wchar_t **wargv)
 
     scanner.CloseSession(&hSession);
 
-    if (FAILED(hr))
-    {
-        printf("# FAILED.\n");
-        return 3;
-    }
     if (detected)
     {
         printf("# DETECTED.\n");
         return 2;
+    }
+    if (FAILED(hr))
+    {
+        printf("# FAILED.\n");
+        return 3;
     }
     if (total_count == not_detected)
     {

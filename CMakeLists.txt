@@ -76,7 +76,7 @@ endif()
 message(STATUS "PAMSIXX_STATIC: ${PAMSIXX_STATIC}")
 
 # amsiscan.exe
-add_executable(amsiscan amsiscan.cpp AmsiScanner.cpp)
+add_executable(amsiscan amsiscan.cpp AmsiScanner.cpp ads.cpp)
 if (HAVE_AMSI_H AND PAMSIXX_STATIC)
     target_link_libraries(amsiscan PRIVATE amsi)
 endif()
