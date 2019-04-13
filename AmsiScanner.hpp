@@ -85,7 +85,7 @@ inline void AmsiSample::init()
 {
     m_data = NULL;
     m_size = 0;
-    m_pathname[0] = 0;
+    m_pathname.clear();
 }
 
 //////////////////////////////////////////////////////////////////////////////
