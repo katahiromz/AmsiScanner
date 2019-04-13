@@ -45,8 +45,6 @@ int wmain(int argc, wchar_t **wargv)
         return 3;
     }
 
-    AmsiScanner::SAMPLE sample;
-    AmsiScanner::SCAN_RESULT result;
     int total_count = 0, not_detected = 0, detected = 0, unknown = 0;
     for (int i = 1; i < argc; ++i, ++total_count)
     {
@@ -63,9 +61,10 @@ int wmain(int argc, wchar_t **wargv)
             break;
         }
 
-        result.init();
+        AmsiScanner::SCAN_RESULT result;
+        AmsiScanner::SAMPLE sample;
 
-        hr = scanner.LoadSample(sample, wargv[i]);
+        hr = sample.load(wargv[i]);
         if (SUCCEEDED(hr))
         {
             hr = scanner.ScanSample(hSession, sample, result);
@@ -97,8 +96,6 @@ int wmain(int argc, wchar_t **wargv)
                     result.result_string());
             ++not_detected;
         }
-
-        scanner.FreeSample(sample);
     }
 
     scanner.CloseSession(&hSession);

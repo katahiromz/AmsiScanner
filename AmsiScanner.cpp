@@ -1,15 +1,6 @@
 // AmsiScanner.cpp
 #include "AmsiScanner.hpp"
 
-AmsiScanner::AmsiScanner() : m_hContext(NULL)
-{
-}
-
-AmsiScanner::AmsiScanner(LPCWSTR appName) : m_hContext(NULL)
-{
-    Load(appName);
-}
-
 BOOL AmsiScanner::Load(LPCWSTR appName)
 {
     Free();
@@ -27,59 +18,13 @@ BOOL AmsiScanner::Load(LPCWSTR appName)
     return TRUE;
 }
 
-void AmsiScanner::Free()
-{
-    if (m_hContext)
-    {
-        AmsiUninitialize(m_hContext);
-        m_hContext = NULL;
-    }
-
-    PAMSIXX::unload_amsi();
-}
-
-BOOL AmsiScanner::IsLoaded() const
-{
-    return is_amsi_loaded() && m_hContext != NULL;
-}
-
-AmsiScanner::~AmsiScanner()
-{
-    Free();
-}
-
-HRESULT AmsiScanner::OpenSession(HAMSISESSION *phSession)
-{
-    HRESULT hr = AmsiOpenSession(m_hContext, phSession);
-    return hr;
-}
-
-void AmsiScanner::CloseSession(HAMSISESSION *phSession)
-{
-    if (phSession && *phSession)
-    {
-        AmsiCloseSession(m_hContext, *phSession);
-        *phSession = NULL;
-    }
-}
-
-void AmsiScanner::FreeSample(SAMPLE& sample)
-{
-    if (sample.data)
-    {
-        std::free(sample.data);
-        sample.data = NULL;
-    }
-    sample.size = 0;
-}
-
-HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, const SAMPLE& sample,
+HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, SAMPLE& sample,
                                 SCAN_RESULT& result)
 {
     result.init();
 
     HRESULT hr;
-    hr = AmsiScanBuffer(m_hContext, sample.data, sample.size, sample.pathname,
+    hr = AmsiScanBuffer(m_hContext, sample.m_data, sample.m_size, sample.m_pathname,
                         hSession, &result.value);
     if (hr == S_OK)
     {
@@ -111,11 +56,9 @@ const char *AmsiScanner::SCAN_RESULT::result_string() const
     }
 }
 
-HRESULT AmsiScanner::LoadSample(SAMPLE& sample, const WCHAR *filename)
+HRESULT AmsiScanner::SAMPLE::load(const WCHAR *filename)
 {
-    sample.init();
-
-    GetFullPathNameW(filename, ARRAYSIZE(sample.pathname), sample.pathname, NULL);
+    GetFullPathNameW(filename, ARRAYSIZE(m_pathname), m_pathname, NULL);
 
     HANDLE hFile = ::CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL,
                                  OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
@@ -153,7 +96,7 @@ HRESULT AmsiScanner::LoadSample(SAMPLE& sample, const WCHAR *filename)
 
     ::CloseHandle(hFile);
 
-    sample.data = buffer;
-    sample.size = dwFileSize;
+    m_data = buffer;
+    m_size = dwFileSize;
     return S_OK;
 }
