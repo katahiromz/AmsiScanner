@@ -6,9 +6,9 @@ Windows 10 contains `amsi.dll` DLL file, that provides AMSI.
 
 ## Files
 
-File `pamsi.h` is a portable C/C++ AMSI header. File `pamsi.c` is an AMSI API wrapper in C. If you want to use this wrapper, then do `#define WRAP_AMSI`.
+File `pamsi.h` is a portable C/C++ AMSI header.
 
-Files `pamsixx.hpp` and `pamsixx.cpp` provide a C++ `PAMSIXX` class that manipulates the AMSI API using `amsi.dll` file.
+File `pamsixx.hpp` provides a C++ `PAMSIXX` class that manipulates the AMSI API using `amsi.dll` file.
 
 Class `AmsiScanner` of `AmsiScanner.hpp` and `AmsiScanner.cpp` files provides a C++ high-level scanner interface for AMSI.
 
