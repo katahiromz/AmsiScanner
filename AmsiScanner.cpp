@@ -28,15 +28,15 @@ HRESULT AmsiScanner::ScanSample(HAMSISESSION hSession, SAMPLE& sample,
                         hSession, &result.value);
     if (hr == S_OK)
     {
-        result.IsUnknown = FALSE;
-        result.IsMalware = AmsiResultIsMalware(result.value);
+        result.is_unknown = FALSE;
+        result.is_malware = AmsiResultIsMalware(result.value);
     }
     return hr;
 }
 
 const char *AmsiScanner::SCAN_RESULT::result_string() const
 {
-    if (IsUnknown)
+    if (is_unknown)
         return "Unknown";
 
     switch (value)

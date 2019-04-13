@@ -20,8 +20,8 @@ public:
     struct SCAN_RESULT
     {
         AMSI_RESULT value;
-        BOOL IsMalware;
-        BOOL IsUnknown;
+        BOOL is_malware;
+        BOOL is_unknown;
 
         SCAN_RESULT();
         void init();
@@ -105,8 +105,8 @@ inline void AmsiScanner::Free()
 inline void AmsiScanner::SCAN_RESULT::init()
 {
     value = AMSI_RESULT_NOT_DETECTED;
-    IsMalware = FALSE;
-    IsUnknown = TRUE;
+    is_malware = FALSE;
+    is_unknown = TRUE;
 }
 
 inline AmsiScanner::SAMPLE::SAMPLE()

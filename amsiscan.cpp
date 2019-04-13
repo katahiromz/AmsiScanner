@@ -75,14 +75,14 @@ int wmain(int argc, wchar_t **wargv)
             break;
         }
 
-        if (result.IsUnknown)
+        if (result.is_unknown)
         {
             fprintf(stderr,
                     "[%d] %ls: UNKNOWN: %s\n", total_count + 1, wargv[i],
                     result.result_string());
             ++unknown;
         }
-        else if (result.IsMalware)
+        else if (result.is_malware)
         {
             fprintf(stderr,
                     "[%d] %ls: MALWARE: %s\n", total_count + 1, wargv[i],
