@@ -1,6 +1,6 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 5
+#define AMSI_SCANNER_HPP_ 6
 
 #include "pamsixx.hpp"
 #include <cstdlib>
@@ -22,6 +22,7 @@ public:
         AMSI_RESULT value;
         BOOL IsMalware;
         BOOL IsUnknown;
+
         SCAN_RESULT();
         void init();
         const char *result_string() const;
