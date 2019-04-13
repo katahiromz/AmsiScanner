@@ -56,17 +56,17 @@ inline bool PAMSIXX::load_amsi()
     m_hinst = LoadLibraryA(AMSI_DLL);
     if (m_hinst)
     {
-#define GETPROC(name) get_proc(name, m_hinst, #name)
-        if (GETPROC(AmsiInitialize) &&
-            GETPROC(AmsiUninitialize) &&
-            GETPROC(AmsiOpenSession) &&
-            GETPROC(AmsiCloseSession) &&
-            GETPROC(AmsiScanString) &&
-            GETPROC(AmsiScanBuffer))
+# define PAMSIXX_GETPROC(name) get_proc(name, m_hinst, #name)
+        if (PAMSIXX_GETPROC(AmsiInitialize) &&
+            PAMSIXX_GETPROC(AmsiUninitialize) &&
+            PAMSIXX_GETPROC(AmsiOpenSession) &&
+            PAMSIXX_GETPROC(AmsiCloseSession) &&
+            PAMSIXX_GETPROC(AmsiScanString) &&
+            PAMSIXX_GETPROC(AmsiScanBuffer))
         {
             return true;
         }
-#undef GETPROC
+# undef PAMSIXX_GETPROC
         FreeLibrary(m_hinst);
     }
     AmsiInitialize = NULL;
@@ -76,6 +76,9 @@ inline bool PAMSIXX::load_amsi()
     AmsiScanString = NULL;
     AmsiScanBuffer = NULL;
     m_hinst = NULL;
+    return false;
+#else
+    return true;
 #endif
 }
 
