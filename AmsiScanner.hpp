@@ -99,6 +99,7 @@ inline void AmsiResult::init()
 }
 
 //////////////////////////////////////////////////////////////////////////////
+// AmsiScanner inlines
 
 inline AmsiScanner::AmsiScanner() : m_hContext(NULL)
 {
