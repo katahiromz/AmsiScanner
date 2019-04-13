@@ -51,7 +51,9 @@ inline PAMSIXX::~PAMSIXX()
 
 inline bool PAMSIXX::load_amsi()
 {
-#ifndef PAMSIXX_STATIC
+#ifdef PAMSIXX_STATIC
+    return true;
+#else
     unload_amsi();
     m_hinst = LoadLibraryA(AMSI_DLL);
     if (m_hinst)
@@ -77,8 +79,6 @@ inline bool PAMSIXX::load_amsi()
     AmsiScanBuffer = NULL;
     m_hinst = NULL;
     return false;
-#else
-    return true;
 #endif
 }
 
