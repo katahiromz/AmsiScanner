@@ -2,8 +2,6 @@
 #include "pamsi.h"
 
 #ifdef WRAP_AMSI
-#define AMSIDLL "amsi.dll"
-
 AMSIINITIALIZE g_pAmsiInitialize = NULL;
 AMSIUNINITIALIZE g_pAmsiUninitialize = NULL;
 AMSIOPENSESSION g_pAmsiOpenSession = NULL;
