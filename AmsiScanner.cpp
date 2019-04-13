@@ -65,6 +65,8 @@ const char *AmsiScanner::SCAN_RESULT::result_string() const
 
 HRESULT AmsiScanner::SAMPLE::load(const WCHAR *filename)
 {
+    free();
+
     GetFullPathNameW(filename, ARRAYSIZE(m_pathname), m_pathname, NULL);
 
     HANDLE hFile = ::CreateFileW(filename, GENERIC_READ, FILE_SHARE_READ, NULL,

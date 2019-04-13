@@ -38,6 +38,7 @@ public:
         ~SAMPLE();
         void init();
         HRESULT load(const WCHAR *filename);
+        void free();
     };
 
 public:
@@ -114,11 +115,16 @@ inline AmsiScanner::SAMPLE::SAMPLE()
     init();
 }
 
-inline AmsiScanner::SAMPLE::~SAMPLE()
+inline void AmsiScanner::SAMPLE::free()
 {
     std::free(m_data);
     m_data = NULL;
     m_size = 0;
+}
+
+inline AmsiScanner::SAMPLE::~SAMPLE()
+{
+    free();
 }
 
 inline void AmsiScanner::SAMPLE::init()
