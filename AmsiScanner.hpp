@@ -1,6 +1,6 @@
 // AmsiScanner.hpp
 #ifndef AMSI_SCANNER_HPP_
-#define AMSI_SCANNER_HPP_ 7
+#define AMSI_SCANNER_HPP_ 8
 
 #include "pamsixx.hpp"
 #include <cstdlib>
@@ -40,7 +40,7 @@ class AmsiScanner : public PAMSIXX
 public:
     AmsiScanner();  // without loading
     AmsiScanner(LPCWSTR appName);   // with loading
-    virtual ~AmsiScanner();
+    ~AmsiScanner();
 
     BOOL Load(LPCWSTR appName);
     BOOL IsLoaded() const;

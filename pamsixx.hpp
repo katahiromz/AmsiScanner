@@ -1,5 +1,5 @@
 #ifndef PAMSIXX_HPP_
-#define PAMSIXX_HPP_ 2
+#define PAMSIXX_HPP_ 3
 
 #include "pamsi.h"
 
@@ -7,7 +7,7 @@ class PAMSIXX
 {
 public:
     PAMSIXX();
-    virtual ~PAMSIXX();
+    ~PAMSIXX();
 
     bool load_amsi();
     void unload_amsi();
@@ -50,7 +50,8 @@ inline bool PAMSIXX::load_amsi()
     m_hinst = LoadLibraryA(AMSI_DLL);
     if (m_hinst)
     {
-# define PAMSIXX_GET_PROC(fn) (fn = (FN_##fn)GetProcAddress(m_hinst, #fn)) != NULL
+# define PAMSIXX_GET_PROC(fn) \
+    (fn = reinterpret_cast<FN_##fn>(GetProcAddress(m_hinst, #fn))) != NULL
         if (PAMSIXX_GET_PROC(AmsiInitialize) &&
             PAMSIXX_GET_PROC(AmsiUninitialize) &&
             PAMSIXX_GET_PROC(AmsiOpenSession) &&
