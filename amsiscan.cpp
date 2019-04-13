@@ -102,6 +102,7 @@ int wmain(int argc, wchar_t **wargv)
 
     if (FAILED(hr))
     {
+        printf("# FAILED.\n");
         return 3;
     }
     if (detected)
