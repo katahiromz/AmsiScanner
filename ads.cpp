@@ -3,6 +3,7 @@
 // This file is public domain software.
 
 #include "ads.hpp"
+#include <cassert>
 
 HRESULT read_ads_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
                        LPVOID *ppContext)
@@ -113,20 +114,22 @@ HRESULT get_ads_entries(LPCWSTR filename, std::vector<ADS_ENTRY>& entries)
     return hr;
 }
 
-HANDLE open_ads_file(LPCWSTR filename, const ADS_ENTRY& entry, BOOL bWrite)
+HANDLE open_ads_file(LPCWSTR filename, LPCWSTR strname, BOOL bWrite)
 {
-    std::wstring name = filename;
-    name += entry.name;
+    assert(strname[0] == L':');
+
+    std::wstring pathname = filename;
+    pathname += strname;
 
     HANDLE hFile;
     if (bWrite)
     {
-        hFile = CreateFileW(name.c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL,
+        hFile = CreateFileW(pathname.c_str(), GENERIC_WRITE, FILE_SHARE_READ, NULL,
                             CREATE_ALWAYS, 0, NULL);
     }
     else
     {
-        hFile = CreateFileW(name.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL,
+        hFile = CreateFileW(pathname.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL,
                             OPEN_EXISTING, 0, NULL);
     }
 
@@ -135,7 +138,7 @@ HANDLE open_ads_file(LPCWSTR filename, const ADS_ENTRY& entry, BOOL bWrite)
 
 HRESULT get_ads_file(LPCWSTR filename, ADS_ENTRY& entry, std::string& data)
 {
-    HANDLE hFile = open_ads_file(filename, entry, FALSE);
+    HANDLE hFile = open_ads_file(filename, entry.name.c_str(), FALSE);
     if (hFile == INVALID_HANDLE_VALUE)
     {
         return E_FAIL;
@@ -173,7 +176,7 @@ HRESULT get_ads_file(LPCWSTR filename, ADS_ENTRY& entry, std::string& data)
 
 HRESULT put_ads_file(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data)
 {
-    HANDLE hFile = open_ads_file(filename, entry, TRUE);
+    HANDLE hFile = open_ads_file(filename, entry.name.c_str(), TRUE);
     if (hFile == INVALID_HANDLE_VALUE)
         return E_FAIL;
 
