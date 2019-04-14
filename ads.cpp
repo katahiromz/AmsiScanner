@@ -209,6 +209,8 @@ HRESULT put_ads_file(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data
 
 HRESULT delete_ads(LPCWSTR filename, LPCWSTR name)
 {
+    assert(name[0] == L':');
+
     std::wstring pathname = filename;
     pathname += name;
 
