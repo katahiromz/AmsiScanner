@@ -83,13 +83,13 @@ HRESULT get_ads_entries(LPCWSTR filename, std::vector<ADS_ENTRY>& entries)
     entries.clear();
 
     HANDLE hFile;
-    hFile  = CreateFileW(filename,
-                         GENERIC_READ,
-                         FILE_SHARE_READ,
-                         NULL,
-                         OPEN_EXISTING,
-                         FILE_FLAG_BACKUP_SEMANTICS,
-                         NULL);
+    hFile = CreateFileW(filename,
+                        GENERIC_READ,
+                        FILE_SHARE_READ,
+                        NULL,
+                        OPEN_EXISTING,
+                        FILE_FLAG_BACKUP_SEMANTICS,
+                        NULL);
     if (hFile == INVALID_HANDLE_VALUE)
     {
         return E_FAIL;
