@@ -75,13 +75,18 @@ else()
 endif()
 message(STATUS "PAMSIXX_STATIC: ${PAMSIXX_STATIC}")
 
+# libads.a
+add_library(ads STATIC ads.cpp)
+
 # amsiscan.exe
-add_executable(amsiscan amsiscan.cpp AmsiScanner.cpp ads.cpp)
+add_executable(amsiscan amsiscan.cpp AmsiScanner.cpp)
 if (HAVE_AMSI_H AND PAMSIXX_STATIC)
     target_link_libraries(amsiscan PRIVATE amsi)
 endif()
+target_link_libraries(amsiscan PRIVATE ads)
 
 # ads_test.exe
-add_executable(ads_test ads_test.cpp ads.cpp)
+add_executable(ads_test ads_test.cpp)
+target_link_libraries(ads_test PRIVATE ads)
 
 ##############################################################################
