@@ -16,7 +16,7 @@ HRESULT ADS_read_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
     entry.Size.QuadPart = 0;
 
     ZeroMemory(&sid, sizeof(sid));
-    cbToRead = FIELD_OFFSET(WIN32_STREAM_ID, cStreamName);
+    cbToRead = DWORD(offsetof(WIN32_STREAM_ID, cStreamName));
     if (!BackupRead(hFile, (LPBYTE)&sid, cbToRead, &cbDidRead,
                     FALSE, FALSE, ppContext))
     {
