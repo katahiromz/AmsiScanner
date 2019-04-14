@@ -207,12 +207,12 @@ HRESULT ADS_put_data(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data
     return hr;
 }
 
-HRESULT ADS_delete(LPCWSTR filename, LPCWSTR name)
+HRESULT ADS_delete(LPCWSTR filename, LPCWSTR strname)
 {
-    assert(name[0] == L':');
+    assert(strname[0] == L':');
 
     std::wstring pathname = filename;
-    pathname += name;
+    pathname += strname;
 
     return DeleteFileW(pathname.c_str()) ? S_OK : E_FAIL;
 }
