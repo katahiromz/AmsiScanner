@@ -1,5 +1,5 @@
 #ifndef PAMSIXX_HPP_
-#define PAMSIXX_HPP_ 3
+#define PAMSIXX_HPP_ 4
 
 #include "pamsi.h"
 
@@ -28,7 +28,13 @@ public:
 
 inline PAMSIXX::PAMSIXX()
 #ifndef PAMSIXX_STATIC
-    : m_hinst(NULL)
+  : m_hinst(NULL),
+    AmsiInitialize(NULL),
+    AmsiUninitialize(NULL),
+    AmsiOpenSession(NULL),
+    AmsiCloseSession(NULL),
+    AmsiScanString(NULL),
+    AmsiScanBuffer(NULL)
 #endif
 {
 }

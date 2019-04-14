@@ -127,15 +127,20 @@ inline AmsiScanner::~AmsiScanner()
 
 inline HRESULT AmsiScanner::OpenSession(HAMSISESSION *phSession)
 {
-    HRESULT hr = AmsiOpenSession(m_hContext, phSession);
-    return hr;
+    if (IsLoaded())
+    {
+        HRESULT hr = AmsiOpenSession(m_hContext, phSession);
+        return hr;
+    }
+    return E_FAIL;
 }
 
 inline void AmsiScanner::CloseSession(HAMSISESSION *phSession)
 {
     if (phSession && *phSession)
     {
-        AmsiCloseSession(m_hContext, *phSession);
+        if (IsLoaded())
+            AmsiCloseSession(m_hContext, *phSession);
         *phSession = NULL;
     }
 }
@@ -144,7 +149,8 @@ inline void AmsiScanner::Free()
 {
     if (m_hContext)
     {
-        AmsiUninitialize(m_hContext);
+        if (IsLoaded())
+            AmsiUninitialize(m_hContext);
         m_hContext = NULL;
     }
 

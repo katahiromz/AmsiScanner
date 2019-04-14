@@ -102,6 +102,9 @@ HRESULT AmsiScanner::DoScan(HAMSISESSION hSession, AmsiSample& sample,
 {
     result.init();
 
+    if (!IsLoaded())
+        return E_FAIL;
+
     if (sample.m_size == 0)
     {
         result.is_unknown = FALSE;
@@ -124,6 +127,9 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
                                 AmsiResult& result)
 {
     HRESULT hr;
+
+    if (!IsLoaded())
+        return E_FAIL;
 
     {
         AmsiSample sample;
