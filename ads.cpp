@@ -1,4 +1,4 @@
-// ADS (alternative data stream) support
+// ADS (alternate data stream) support
 // Copyright (C) 2019 Katayama Hirofumi MZ <katayama.hirofumi.mz@gmail.coM.
 // This file is public domain software.
 
@@ -202,4 +202,28 @@ HRESULT put_ads_file(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data
 
     CloseHandle(hFile);
     return hr;
+}
+
+HRESULT delete_ads(LPCWSTR filename, LPCWSTR name)
+{
+    std::wstring pathname = filename;
+    pathname += name;
+
+    return DeleteFileW(pathname.c_str()) ? S_OK : E_FAIL;
+}
+
+HRESULT delete_ads_all(LPCWSTR filename)
+{
+    HRESULT hr1, hr2;
+    std::vector<ADS_ENTRY> entries;
+    hr1 = get_ads_entries(filename, entries);
+    for (size_t i = 0; i < entries.size(); ++i)
+    {
+        hr2 = delete_ads(filename, entries[i].name.c_str());
+        if (FAILED(hr2))
+        {
+            hr1 = hr2;
+        }
+    }
+    return hr1;
 }

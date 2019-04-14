@@ -29,15 +29,22 @@ int wmain(int argc, WCHAR **wargv)
     {
         ADS_ENTRY entry;
         entry.name = wargv[2];
-        if (entry.name[0] != L':')
-        {
-            printf("ERROR\n");
-            return -1;
-        }
 
-        std::string data;
-        hr = get_ads_file(wargv[1], entry, data);
-        printf("%s\n", data.c_str());
+        if (entry.name == L"--delete")
+        {
+            hr = delete_ads_all(wargv[1]);
+        }
+        else
+        {
+            if (entry.name[0] != L':')
+            {
+                printf("ERROR\n");
+                return -1;
+            }
+            std::string data;
+            hr = get_ads_file(wargv[1], entry, data);
+            printf("%s\n", data.c_str());
+        }
 
         return hr;
     }
@@ -52,9 +59,17 @@ int wmain(int argc, WCHAR **wargv)
             return -1;
         }
 
-        char buf[256];
-        WideCharToMultiByte(CP_ACP, 0, wargv[3], -1, buf, 256, NULL, NULL);
-        hr = put_ads_file(wargv[1], entry, buf);
+        std::wstring value = wargv[3];
+        if (value == L"--delete")
+        {
+            hr = delete_ads(wargv[1], wargv[2]);
+        }
+        else
+        {
+            char buf[256];
+            WideCharToMultiByte(CP_ACP, 0, wargv[3], -1, buf, 256, NULL, NULL);
+            hr = put_ads_file(wargv[1], entry, buf);
+        }
         return hr;
     }
 
