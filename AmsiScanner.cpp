@@ -156,7 +156,7 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
         hr = ADS_get_data(filename, entries[i], data);
 
         AmsiSample sample;
-        if (FAILED(hr))
+        if (FAILED(hr) || data.size() > ULONG_MAX)
         {
             is_unknown = is_failed = TRUE;
         }

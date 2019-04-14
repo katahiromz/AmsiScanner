@@ -162,7 +162,7 @@ HRESULT ADS_get_data(LPCWSTR filename, ADS_ENTRY& entry, std::string& data)
     if (data.size() > 0)
     {
         DWORD cbDidRead;
-        if (!ReadFile(hFile, &data[0], data.size(), &cbDidRead, NULL))
+        if (!ReadFile(hFile, &data[0], entry.Size.LowPart, &cbDidRead, NULL))
         {
             data.clear();
             CloseHandle(hFile);
@@ -188,7 +188,7 @@ HRESULT ADS_put_data(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data
         if (data.size() > 0)
         {
             DWORD cbDidWrite;
-            if (WriteFile(hFile, data.c_str(), data.size(), &cbDidWrite, NULL))
+            if (WriteFile(hFile, data.c_str(), entry.Size.LowPart, &cbDidWrite, NULL))
                 hr = S_OK;
             else
                 hr = E_FAIL;
