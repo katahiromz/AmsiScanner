@@ -13,12 +13,12 @@ int wmain(int argc, WCHAR **wargv)
     if (argc == 2)
     {
         std::vector<ADS_ENTRY> entries;
-        hr = get_ads_entries(wargv[1], entries);
+        hr = ADS_get_entries(wargv[1], entries);
 
         for (size_t i = 0; i < entries.size(); ++i)
         {
             std::string data;
-            hr = get_ads_file(wargv[1], entries[i], data);
+            hr = ADS_get_data(wargv[1], entries[i], data);
             printf("%d: %ls: %s\n", int(i), entries[i].name.c_str(), data.c_str());
         }
 
@@ -32,7 +32,7 @@ int wmain(int argc, WCHAR **wargv)
 
         if (entry.name == L"--delete")
         {
-            hr = delete_ads_all(wargv[1]);
+            hr = ADS_delete_all(wargv[1]);
         }
         else
         {
@@ -42,7 +42,7 @@ int wmain(int argc, WCHAR **wargv)
                 return -1;
             }
             std::string data;
-            hr = get_ads_file(wargv[1], entry, data);
+            hr = ADS_get_data(wargv[1], entry, data);
             printf("%s\n", data.c_str());
         }
 
@@ -62,13 +62,13 @@ int wmain(int argc, WCHAR **wargv)
         std::wstring value = wargv[3];
         if (value == L"--delete")
         {
-            hr = delete_ads(wargv[1], wargv[2]);
+            hr = ADS_delete(wargv[1], wargv[2]);
         }
         else
         {
             char buf[256];
             WideCharToMultiByte(CP_ACP, 0, wargv[3], -1, buf, 256, NULL, NULL);
-            hr = put_ads_file(wargv[1], entry, buf);
+            hr = ADS_put_data(wargv[1], entry, buf);
         }
         return hr;
     }

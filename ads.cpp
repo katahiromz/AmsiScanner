@@ -5,7 +5,7 @@
 #include "ads.hpp"
 #include <cassert>
 
-HRESULT read_ads_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
+HRESULT ADS_read_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
                        LPVOID *ppContext)
 {
     WIN32_STREAM_ID sid;
@@ -78,7 +78,7 @@ HRESULT read_ads_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
     return S_OK;
 }
 
-HRESULT get_ads_entries(LPCWSTR filename, std::vector<ADS_ENTRY>& entries)
+HRESULT ADS_get_entries(LPCWSTR filename, std::vector<ADS_ENTRY>& entries)
 {
     entries.clear();
 
@@ -99,7 +99,7 @@ HRESULT get_ads_entries(LPCWSTR filename, std::vector<ADS_ENTRY>& entries)
     HRESULT hr = E_FAIL;
     for (;;)
     {
-        hr = read_ads_entry(hFile, entries, &context);
+        hr = ADS_read_entry(hFile, entries, &context);
         if (hr != S_OK)
             break;
     }
@@ -114,7 +114,7 @@ HRESULT get_ads_entries(LPCWSTR filename, std::vector<ADS_ENTRY>& entries)
     return hr;
 }
 
-HANDLE open_ads_file(LPCWSTR filename, LPCWSTR strname, BOOL bWrite)
+HANDLE ADS_open_file(LPCWSTR filename, LPCWSTR strname, BOOL bWrite)
 {
     assert(strname[0] == L':');
 
@@ -136,9 +136,9 @@ HANDLE open_ads_file(LPCWSTR filename, LPCWSTR strname, BOOL bWrite)
     return hFile;
 }
 
-HRESULT get_ads_file(LPCWSTR filename, ADS_ENTRY& entry, std::string& data)
+HRESULT ADS_get_data(LPCWSTR filename, ADS_ENTRY& entry, std::string& data)
 {
-    HANDLE hFile = open_ads_file(filename, entry.name.c_str(), FALSE);
+    HANDLE hFile = ADS_open_file(filename, entry.name.c_str(), FALSE);
     if (hFile == INVALID_HANDLE_VALUE)
     {
         return E_FAIL;
@@ -174,9 +174,9 @@ HRESULT get_ads_file(LPCWSTR filename, ADS_ENTRY& entry, std::string& data)
     return S_OK;
 }
 
-HRESULT put_ads_file(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data)
+HRESULT ADS_put_data(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data)
 {
-    HANDLE hFile = open_ads_file(filename, entry.name.c_str(), TRUE);
+    HANDLE hFile = ADS_open_file(filename, entry.name.c_str(), TRUE);
     if (hFile == INVALID_HANDLE_VALUE)
         return E_FAIL;
 
@@ -207,7 +207,7 @@ HRESULT put_ads_file(LPCWSTR filename, ADS_ENTRY& entry, const std::string& data
     return hr;
 }
 
-HRESULT delete_ads(LPCWSTR filename, LPCWSTR name)
+HRESULT ADS_delete(LPCWSTR filename, LPCWSTR name)
 {
     assert(name[0] == L':');
 
@@ -217,14 +217,14 @@ HRESULT delete_ads(LPCWSTR filename, LPCWSTR name)
     return DeleteFileW(pathname.c_str()) ? S_OK : E_FAIL;
 }
 
-HRESULT delete_ads_all(LPCWSTR filename)
+HRESULT ADS_delete_all(LPCWSTR filename)
 {
     HRESULT hr1, hr2;
     std::vector<ADS_ENTRY> entries;
-    hr1 = get_ads_entries(filename, entries);
+    hr1 = ADS_get_entries(filename, entries);
     for (size_t i = 0; i < entries.size(); ++i)
     {
-        hr2 = delete_ads(filename, entries[i].name.c_str());
+        hr2 = ADS_delete(filename, entries[i].name.c_str());
         if (FAILED(hr2))
         {
             hr1 = hr2;

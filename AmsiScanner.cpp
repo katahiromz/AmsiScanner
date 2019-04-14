@@ -137,7 +137,7 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
     }
 
     std::vector<ADS_ENTRY> entries;
-    hr = get_ads_entries(filename, entries);
+    hr = ADS_get_entries(filename, entries);
     if (FAILED(hr) || entries.empty())
         return S_OK;
 
@@ -153,7 +153,7 @@ HRESULT AmsiScanner::DoScanFile(HAMSISESSION hSession, LPCWSTR filename,
         //printf("name: %ls\n", entries[i].name.c_str());
 
         std::string data;
-        hr = get_ads_file(filename, entries[i], data);
+        hr = ADS_get_data(filename, entries[i], data);
 
         AmsiSample sample;
         if (FAILED(hr))
