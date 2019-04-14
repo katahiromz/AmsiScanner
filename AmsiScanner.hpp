@@ -127,12 +127,13 @@ inline AmsiScanner::~AmsiScanner()
 
 inline HRESULT AmsiScanner::OpenSession(HAMSISESSION *phSession)
 {
-    if (IsLoaded())
+    if (!IsLoaded())
     {
-        HRESULT hr = AmsiOpenSession(m_hContext, phSession);
-        return hr;
+        *phSession = NULL;
+        return E_FAIL;
     }
-    return E_FAIL;
+    HRESULT hr = AmsiOpenSession(m_hContext, phSession);
+    return hr;
 }
 
 inline void AmsiScanner::CloseSession(HAMSISESSION *phSession)
