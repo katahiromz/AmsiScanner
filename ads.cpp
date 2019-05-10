@@ -3,6 +3,8 @@
 // This file is public domain software.
 
 #include "ads.hpp"
+#include <cstdlib>
+#include <cstring>
 #include <cassert>
 
 HRESULT ADS_read_entry(HANDLE hFile, std::vector<ADS_ENTRY>& entries,
